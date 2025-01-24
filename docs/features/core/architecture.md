@@ -10,6 +10,7 @@
 - Tailwind CSS for styling
 - shadcn/ui component system
 - Financial data management system
+- OpenAI integration for AI assistance
 
 ### Component Relationships
 
@@ -24,6 +25,8 @@ graph TD
     G --> H[Invoice Model]
     G --> I[Bill Model]
     E --> J[API Routes]
+    J --> K[OpenAI Service]
+    K --> L[Chat Streaming]
 ```
 
 ### Data Flow
@@ -34,6 +37,7 @@ graph TD
 - Server Actions for mutations
 - Error boundaries for failure handling
 - Financial data validation and processing
+- Real-time chat streaming with OpenAI
 
 ## Technical Decisions
 
@@ -46,6 +50,7 @@ graph TD
   - Tailwind CSS: Utility-first styling
   - shadcn/ui: Accessible component system
   - TypeScript: Type safety and developer experience
+  - OpenAI SDK: AI integration with streaming support
 
 ### Design Patterns
 
@@ -62,6 +67,11 @@ graph TD
   - Projects: Central entity for organization
   - Invoices: Revenue tracking
   - Bills: Expense tracking
+- AI Integration
+  - Use case: Chat assistance
+  - Implementation: Server-Sent Events for streaming
+  - Error handling: Graceful degradation
+  - State management: Real-time updates
 
 ### Performance Considerations
 
@@ -71,6 +81,8 @@ graph TD
 - Component code splitting
 - Image optimization
 - Financial calculations optimization
+- Streaming responses for AI chat
+- Efficient message handling
 
 ## Dependencies
 
@@ -83,6 +95,13 @@ graph TD
   - Backup strategy: Regular backups
   - Data integrity: ACID compliance
 
+- Service: OpenAI API
+  - Purpose: AI chat assistance
+  - Version: GPT-4
+  - Integration: Server-side API routes
+  - Security: Environment variables
+  - Rate limiting: Per user/session
+
 ### Internal Dependencies
 
 - Module: Prisma Client
@@ -91,6 +110,13 @@ graph TD
   - Integration: Server Components
   - Error handling: Try-catch with logging
   - Connection management: Connection pooling
+
+- Module: OpenAI SDK
+  - Purpose: AI communication
+  - Version: Latest
+  - Integration: API routes
+  - Streaming: Server-Sent Events
+  - Error handling: Graceful degradation
 
 ### Configuration
 

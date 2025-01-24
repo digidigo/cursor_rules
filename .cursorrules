@@ -17,6 +17,7 @@ The task may require creating a new codebase, modifying or debugging an existing
    - Review `.cursorrules` files and `/docs` before every task
    - Every message should reference the cursorrules
    - All components should be in `app/components` or `app/components/ui`
+   
 
 3. Working Memory and State:
 
@@ -38,7 +39,7 @@ The task may require creating a new codebase, modifying or debugging an existing
    │       └── testing.md
    └── cursor_settings.md     # Cursor IDE settings
    ```
-
+   - Task plans go in `docs/working-memory/open/` and move to `docs/working-memory/done/` when completed
    - Review `docs/composer-history` for current and previous tasks
    - Every run should use composer history and `.plan`
    - Always reference the `.cursorrules` file
@@ -139,7 +140,7 @@ Always check these files for current project state before any work:
 13. Use route.ts for API routes
 14. Implement SSG/SSR appropriately
 15. Focus only on task-related changes
-16. Use components over in-line html. If a component doesn't exist, check shadcn for it. If it doesn't exist there, create it.
+16. Use components over in-line html. If a component doesn't exist, check shadcn for it using npx shadcn@latest. If it doesn't exist there, create it.
 
 ## Code Standards
 
@@ -1468,3 +1469,37 @@ Remember:
 - Use exact command output
 - Don't modify or format the timestamp
 - Include both date and time for all entries
+
+## UI Component Installation
+
+1. shadcn/ui Setup:
+   ```bash
+   # Initialize shadcn in existing project
+   npx shadcn@latest init
+   ```
+
+2. Adding Components:
+   ```bash
+   # Add individual or multiple components
+   npx shadcn@latest add [component-name]
+   # Example: npx shadcn@latest add button input scroll-area
+   ```
+
+3. Component Location:
+   - All shadcn components should be in `app/components/ui/`
+   - Never create shadcn components manually
+   - Always use the CLI to add components
+   - Components can be customized after installation
+
+4. Usage Guidelines:
+   - Import from `@/components/ui/[component-name]`
+   - Use TypeScript for all components
+   - Follow shadcn's theming system
+   - Maintain accessibility standards
+
+5. Best Practices:
+   - Add components only as needed
+   - Use the component registry in `components.json`
+   - Keep default styling unless specific design requirements
+   - Document any component customizations
+   - When using React 19, use --force flag for dependencies
