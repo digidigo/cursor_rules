@@ -1,62 +1,61 @@
-import { NextRequest } from 'next/server';
-import OpenAI from 'openai';
+import { NextResponse } from 'next/server';
+import { ChatService } from '@/services/chat/chat.service';
+import { ChatMessage } from '@/types/chat';
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
 
-    // Validate request
-    if (!Array.isArray(messages) || messages.length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid messages format' }),
-        { status: 400 }
-      );
-    }
-
-    // Create stream
-    const stream = await openai.chat.completions.create({
-      model: 'gpt-4',
-      messages,
-      stream: true,
+    const chatService = ChatService.getInstance({
+      model: 'gpt-4-0125-preview',
+      maxResponseTokens: 500,
+      apiKey: process.env.OPENAI_API_KEY!,
     });
 
-    // Create a readable stream
-    const readableStream = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of stream) {
-            const content = chunk.choices[0]?.delta?.content || '';
-            if (content) {
-              // Send the content as a Server-Sent Event
-              controller.enqueue(
-                new TextEncoder().encode(`data: ${JSON.stringify({ content })}\n\n`)
-              );
-            }
-          }
-          controller.close();
-        } catch (error) {
-          controller.error(error);
+    const encoder = new TextEncoder();
+    const stream = new TransformStream();
+    const writer = stream.writable.getWriter();
+
+    let responseContent = '';
+    let usage = null;
+    let cost = null;
+
+    chatService.streamResponse(messages as ChatMessage[], {
+      onContent: async (content: string) => {
+        responseContent = content;
+        await writer.write(
+          encoder.encode(`data: ${JSON.stringify({ content })}\n\n`)
+        );
+      },
+      onDone: async (data: { content: string; usage?: any; cost?: number }) => {
+        if (data.usage) {
+          usage = data.usage;
+          cost = data.cost;
+          await writer.write(
+            encoder.encode(
+              `data: ${JSON.stringify({ content: responseContent, usage, cost })}\n\n`
+            )
+          );
         }
+        await writer.close();
+      },
+      onError: async (error: Error) => {
+        console.error('Stream error:', error);
+        await writer.abort(error);
       },
     });
 
-    // Return the stream with appropriate headers
-    return new Response(readableStream, {
+    return new NextResponse(stream.readable, {
       headers: {
         'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
+        Connection: 'keep-alive',
+        'Cache-Control': 'no-cache, no-transform',
       },
     });
   } catch (error) {
-    console.error('Chat API Error:', error);
-    return new Response(
-      JSON.stringify({ error: 'Failed to process chat request' }),
+    console.error('API error:', error);
+    return NextResponse.json(
+      { error: 'Failed to process chat request' },
       { status: 500 }
     );
   }

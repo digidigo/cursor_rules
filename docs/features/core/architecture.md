@@ -11,6 +11,7 @@
 - shadcn/ui component system
 - Financial data management system
 - OpenAI integration for AI assistance
+- Real-time cost tracking system
 
 ### Component Relationships
 
@@ -27,6 +28,9 @@ graph TD
     E --> J[API Routes]
     J --> K[OpenAI Service]
     K --> L[Chat Streaming]
+    K --> M[Cost Tracking]
+    M --> N[Token Usage]
+    M --> O[Cost Calculation]
 ```
 
 ### Data Flow
@@ -38,6 +42,7 @@ graph TD
 - Error boundaries for failure handling
 - Financial data validation and processing
 - Real-time chat streaming with OpenAI
+- Token usage and cost tracking
 
 ## Technical Decisions
 
@@ -72,6 +77,11 @@ graph TD
   - Implementation: Server-Sent Events for streaming
   - Error handling: Graceful degradation
   - State management: Real-time updates
+- Cost Tracking System
+  - Use case: Monitor AI usage costs
+  - Implementation: Real-time token counting
+  - Cost calculation: Per-message and total
+  - Display: Integrated in chat interface
 
 ### Performance Considerations
 
@@ -83,6 +93,7 @@ graph TD
 - Financial calculations optimization
 - Streaming responses for AI chat
 - Efficient message handling
+- Token usage optimization
 
 ## Dependencies
 
@@ -97,10 +108,12 @@ graph TD
 
 - Service: OpenAI API
   - Purpose: AI chat assistance
-  - Version: GPT-4
+  - Version: GPT-4 Turbo (mini)
   - Integration: Server-side API routes
   - Security: Environment variables
   - Rate limiting: Per user/session
+  - Cost tracking: Per message and total
+  - Token usage: Input/output tracking
 
 ### Internal Dependencies
 
@@ -117,16 +130,19 @@ graph TD
   - Integration: API routes
   - Streaming: Server-Sent Events
   - Error handling: Graceful degradation
+  - Cost tracking: Token-based pricing
+  - Usage monitoring: Real-time tracking
 
 ### Configuration
 
 - Environment variables
   - DATABASE_URL
   - NODE_ENV
-  - API keys (if needed)
+  - OPENAI_API_KEY
 - Feature flags
   - Development features
   - Beta features
+  - Cost tracking features
 - Build settings
   - TypeScript configuration
   - Tailwind configuration
@@ -140,6 +156,7 @@ graph TD
 - Implementation: Server-side
 - Token handling: HTTP-only cookies
 - Session management: Server-side sessions
+- Cost tracking: Per-user basis
 
 ### Authorization
 
@@ -147,6 +164,7 @@ graph TD
 - Server-side validation
 - Protected routes
 - Resource-level permissions
+- Usage limits enforcement
 
 ### Data Protection
 
@@ -155,6 +173,7 @@ graph TD
 - XSS prevention
 - CSRF protection
 - Financial data encryption
+- Cost data security
 
 ## Monitoring
 
@@ -165,6 +184,8 @@ graph TD
 - Database query performance
 - Error rates
 - Financial transaction metrics
+- Token usage metrics
+- Cost tracking metrics
 
 ### Logging
 
@@ -173,6 +194,42 @@ graph TD
 - Database query logging
 - Performance monitoring
 - Transaction audit logs
+- Token usage logs
+- Cost tracking logs
+
+## Cost Tracking System
+
+### Token Usage
+
+- Input tokens tracking
+- Output tokens tracking
+- Total tokens calculation
+- Real-time updates
+- Per-message breakdown
+
+### Cost Calculation
+
+- Input cost: $0.15 per 1M tokens
+- Cached input cost: $0.075 per 1M tokens
+- Output cost: $0.60 per 1M tokens
+- Real-time calculation
+- Running total maintenance
+
+### Display Integration
+
+- Per-message costs
+- Total conversation cost
+- Token usage breakdown
+- Cost icons and formatting
+- Real-time updates
+
+### Future Enhancements
+
+- Cost analytics over time
+- Usage pattern analysis
+- Cost optimization suggestions
+- Budget management
+- Export capabilities
 
 ## Data Models
 
