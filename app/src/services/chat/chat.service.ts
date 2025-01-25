@@ -9,6 +9,9 @@ import { SQL_PROMPTS } from './prompts/sql-prompts';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { logger } from '@/lib/logger';
 import { v4 as uuidv4 } from 'uuid';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { SQLService } from '../sql/sql.service';
 
 interface StreamCallbacks {
   onContent: (content: string) => void | Promise<void>;
@@ -25,7 +28,13 @@ interface SQLResponse {
     status: string;
     summary: string;
     sql: string;
+    values?: any[];
   };
+}
+
+interface SchemaTable {
+  name: string;
+  sql: string;
 }
 
 /**
@@ -35,7 +44,7 @@ export class ChatService {
   private static instance: ChatService;
   private openai: OpenAI;
   private config: ChatServiceConfig;
-  private prisma: PrismaClient;
+  private sqlService: SQLService;
   private readonly inputTokenCost: number = 0.15 / 1_000_000; // $0.15 per 1M tokens
   private readonly cachedInputTokenCost: number = 0.075 / 1_000_000; // $0.075 per 1M tokens
   private readonly outputTokenCost: number = 0.60 / 1_000_000; // $0.60 per 1M tokens
@@ -55,7 +64,7 @@ export class ChatService {
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
-    this.prisma = new PrismaClient();
+    this.sqlService = SQLService.getInstance();
   }
 
   /**
@@ -110,98 +119,17 @@ export class ChatService {
     return Number((inputCost + outputCost).toFixed(6));
   }
 
-  private async generateResponse(messages: ChatMessage[]): Promise<ChatResponse> {
-    try {
-      logger.info('Starting response generation', { messages });
-      const schema = await this.getDatabaseSchema();
-      
-      // Build system prompt with schema included
-      const systemPrompt = SQL_PROMPTS.SYSTEM_PROMPT.replace('{schema}', JSON.stringify(schema, null, 2));
-      const prompt = [
-        { role: 'system' as const, content: systemPrompt },
-        { role: 'user' as const, content: messages[messages.length - 1].content }
-      ];
+  private serializeResult(result: any): any {
+    return JSON.parse(JSON.stringify(result, (_, value) => 
+      typeof value === 'bigint' ? value.toString() : value
+    ));
+  }
 
-      // Get initial response from LLM
-      const response = await this.openai.chat.completions.create({
-        model: this.config.model,
-        messages: prompt,
-        temperature: 0,
-      });
-
-      const rawResponse = response.choices[0]?.message?.content;
-      if (!rawResponse) {
-        throw new Error('No response received from OpenAI');
-      }
-
-      const sqlResponse = this.parseSQLResponse(rawResponse);
-      logger.debug('Parsed SQL response', { sqlResponse });
-
-      // For schema queries, return immediately
-      if (sqlResponse.type === 'schema' || !sqlResponse.response.sql) {
-        return {
-          content: sqlResponse.response.summary,
-          usage: response.usage,
-          cost: this.calculateCost(response.usage?.prompt_tokens || 0, response.usage?.completion_tokens || 0),
-          isComplete: true
-        };
-      }
-
-      // For operation queries, execute SQL and summarize
-      try {
-        const { sql: processedSQL, params } = this.processSQL(sqlResponse.response.sql, messages[messages.length - 1].content);
-        const result = await this.executeSQL(processedSQL, params);
-
-        // Generate summary
-        const summaryResponse = await this.openai.chat.completions.create({
-          model: this.config.model,
-          messages: [
-            { role: 'system' as const, content: 'You are a database expert. Explain query results in clear, natural language.' },
-            { 
-              role: 'user' as const, 
-              content: SQL_PROMPTS.SUMMARY_PROMPT
-                .replace('{sql}', sqlResponse.response.sql)
-                .replace('{result}', JSON.stringify(result, null, 2))
-            }
-          ],
-          temperature: 0,
-        });
-
-        const summary = summaryResponse.choices[0]?.message?.content || 'No summary available';
-
-        // Calculate total usage and cost
-        const totalUsage = {
-          prompt_tokens: (response.usage?.prompt_tokens || 0) + (summaryResponse.usage?.prompt_tokens || 0),
-          completion_tokens: (response.usage?.completion_tokens || 0) + (summaryResponse.usage?.completion_tokens || 0),
-          total_tokens: (response.usage?.total_tokens || 0) + (summaryResponse.usage?.total_tokens || 0)
-        };
-
-        const totalCost = this.calculateCost(totalUsage.prompt_tokens, totalUsage.completion_tokens);
-
-        return {
-          content: `${sqlResponse.response.summary}\n\nResult: ${summary}`,
-          usage: totalUsage,
-          cost: totalCost,
-          isComplete: true
-        };
-      } catch (error) {
-        logger.error('SQL execution failed', error);
-        return {
-          content: `I understand what you want to do, but I encountered an error: ${this.getUserFriendlyError(error)}`,
-          usage: response.usage,
-          cost: this.calculateCost(response.usage?.prompt_tokens || 0, response.usage?.completion_tokens || 0),
-          isComplete: true
-        };
-      }
-    } catch (error: unknown) {
-      logger.error('Failed to process response', error);
-      return {
-        content: this.getUserFriendlyError(error),
-        usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
-        cost: 0,
-        isComplete: true
-      };
-    }
+  private async executeSQL(sql: string, values: any[] = []): Promise<any> {
+    return this.sqlService.execute({
+      sql,
+      values: values.reduce((acc, val, idx) => ({ ...acc, [`param${idx}`]: val }), {})
+    });
   }
 
   private processSQL(sql: string, userMessage: string): { sql: string; params: any[] } {
@@ -210,15 +138,13 @@ export class ChatService {
     const params: any[] = [];
     
     // Replace :param with ? and collect parameters in order
-    const processedSQL = sql
-      .replace(/:([\w]+)/g, (match, param) => {
-        if (values[param]) {
-          params.push(values[param]);
-          return '?';
-        }
-        return match;
-      })
-      .replace(/\"([^\"]+)\"/g, '$1'); // Remove double quotes from identifiers
+    const processedSQL = sql.replace(/:([\w]+)/g, (match, param) => {
+      if (values[param]) {
+        params.push(values[param]);
+        return '?';
+      }
+      return match;
+    });
 
     return { sql: processedSQL, params };
   }
@@ -381,25 +307,43 @@ export class ChatService {
   }
 
   private async getDatabaseSchema(): Promise<any> {
-    const schema = await this.prisma.$queryRaw`
-      SELECT name, sql FROM sqlite_master 
-      WHERE type='table' AND name NOT LIKE 'sqlite_%'
-      ORDER BY name;
-    `;
-    return schema;
+    return this.sqlService.getSchema();
   }
 
-  private buildSQLPrompt(messages: ChatMessage[], schema: any): any[] {
-    const prompt = [
-      { role: 'system', content: SQL_PROMPTS.SYSTEM_PROMPT },
-      { 
-        role: 'user', 
-        content: SQL_PROMPTS.QUERY_PROMPT
-          .replace('{schema}', JSON.stringify(schema, null, 2))
-          .replace('{request}', messages[messages.length - 1].content)
-      }
-    ];
-    return prompt;
+  private prismaTypeToSQLite(prismaType: string): string {
+    const typeMap: Record<string, string> = {
+      'String': 'TEXT',
+      'Int': 'INTEGER',
+      'Float': 'REAL',
+      'Boolean': 'INTEGER',
+      'DateTime': 'TEXT',
+      'BigInt': 'INTEGER',
+      'Decimal': 'REAL',
+      'Json': 'TEXT',
+      'Bytes': 'BLOB'
+    };
+
+    return typeMap[prismaType] || 'TEXT';
+  }
+
+  private parseAttributes(attributes: string[]): string {
+    const constraints: string[] = [];
+
+    attributes.forEach(attr => {
+      if (attr === '@id') constraints.push('PRIMARY KEY');
+      if (attr === '@unique') constraints.push('UNIQUE');
+      if (attr === '@default(cuid())') constraints.push('DEFAULT (uuid())');
+      if (attr === '@default(now())') constraints.push("DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))");
+      if (attr === '@updatedAt') constraints.push("DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))");
+    });
+
+    return constraints.length ? ` ${constraints.join(' ')}` : '';
+  }
+
+  private formatSchemaForPrompt(schema: SchemaTable[]): string {
+    return JSON.stringify(schema, null, 2)
+      .replace(/\\n/g, '\n')
+      .replace(/\\"/g, '"');
   }
 
   private parseSQLResponse(rawResponse: string): SQLResponse {
@@ -407,9 +351,126 @@ export class ChatService {
     return response as SQLResponse;
   }
 
-  private executeSQL(sql: string, params: any[] = []): Promise<any> {
-    return this.prisma.$queryRaw(
-      Prisma.sql([sql, ...params])
-    );
+  private async generateResponse(messages: ChatMessage[]): Promise<ChatResponse> {
+    try {
+      logger.info('Starting response generation', { messages });
+      const schema = await this.getDatabaseSchema();
+      
+      // Build system prompt with properly formatted schema
+      const systemPrompt = SQL_PROMPTS.SYSTEM_PROMPT.replace('{schema}', this.formatSchemaForPrompt(schema));
+      const prompt = [
+        { role: 'system' as const, content: systemPrompt },
+        { role: 'user' as const, content: messages[messages.length - 1].content }
+      ];
+
+      // Log the prompt being sent to OpenAI
+      logger.info('Sending prompt to OpenAI', {
+        model: this.config.model,
+        messages: prompt,
+        temperature: 0
+      });
+
+      // Get initial response from LLM
+      const response = await this.openai.chat.completions.create({
+        model: this.config.model,
+        messages: prompt,
+        temperature: 0,
+      });
+
+      // Log the raw response from OpenAI
+      logger.info('Received response from OpenAI', {
+        usage: response.usage,
+        content: JSON.parse(response.choices[0]?.message?.content || '{}')
+      });
+
+      const rawResponse = response.choices[0]?.message?.content;
+      if (!rawResponse) {
+        throw new Error('No response received from OpenAI');
+      }
+
+      const sqlResponse = this.parseSQLResponse(rawResponse);
+      logger.debug('Parsed SQL response', { sqlResponse });
+
+      // For schema queries, return immediately
+      if (sqlResponse.type === 'schema' || !sqlResponse.response.sql) {
+        return {
+          content: sqlResponse.response.summary,
+          usage: response.usage,
+          cost: this.calculateCost(response.usage?.prompt_tokens || 0, response.usage?.completion_tokens || 0),
+          isComplete: true
+        };
+      }
+
+      // For operation queries, execute SQL and summarize
+      try {
+        const result = await this.executeSQL(sqlResponse.response.sql, sqlResponse.response.values || []);
+
+        // Log the summary prompt
+        const summaryPrompt = [
+          { role: 'system' as const, content: 'You are a database expert. Explain query results in clear, natural language.' },
+          { 
+            role: 'user' as const, 
+            content: SQL_PROMPTS.SUMMARY_PROMPT
+              .replace('{sql}', sqlResponse.response.sql)
+              .replace('{result}', JSON.stringify(result, (_, value) => 
+                typeof value === 'bigint' ? value.toString() : value
+              , 2))
+          }
+        ];
+
+        logger.info('Sending summary prompt to OpenAI', {
+          model: this.config.model,
+          messages: summaryPrompt,
+          temperature: 0
+        });
+
+        // Generate summary
+        const summaryResponse = await this.openai.chat.completions.create({
+          model: this.config.model,
+          messages: summaryPrompt,
+          temperature: 0,
+        });
+
+        // Log the summary response
+        logger.info('Received summary response from OpenAI', {
+          usage: summaryResponse.usage,
+          content: summaryResponse.choices[0]?.message?.content
+        });
+
+        const summary = summaryResponse.choices[0]?.message?.content || 'No summary available';
+
+        // Calculate total usage and cost
+        const totalUsage = {
+          prompt_tokens: (response.usage?.prompt_tokens || 0) + (summaryResponse.usage?.prompt_tokens || 0),
+          completion_tokens: (response.usage?.completion_tokens || 0) + (summaryResponse.usage?.completion_tokens || 0),
+          total_tokens: (response.usage?.total_tokens || 0) + (summaryResponse.usage?.total_tokens || 0)
+        };
+
+        const totalCost = this.calculateCost(totalUsage.prompt_tokens, totalUsage.completion_tokens);
+
+        return {
+          content: `${sqlResponse.response.summary}\n\nResult: ${summary}`,
+          usage: totalUsage,
+          cost: totalCost,
+          isComplete: true
+        };
+      } catch (error) {
+        logger.error('SQL execution failed', error);
+        return {
+          content: `I understand what you want to do, but I encountered an error: ${this.getUserFriendlyError(error)}`,
+          usage: response.usage,
+          cost: this.calculateCost(response.usage?.prompt_tokens || 0, response.usage?.completion_tokens || 0),
+          isComplete: true
+        };
+      }
+    } catch (error: unknown) {
+      logger.error('Failed to process response', error);
+      return {
+        content: this.getUserFriendlyError(error),
+        usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+        cost: 0,
+        isComplete: true
+      };
+    }
   }
 } 

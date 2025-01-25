@@ -1,21 +1,16 @@
 import { format } from 'date-fns';
 
-class Logger {
+export class Logger {
   private static instance: Logger;
-  private logDir: string;
-  private currentLogFile: string;
+  private logDir: string = 'logs';
+  private currentLogFile: string = '';
   private isServer: boolean;
 
-  private constructor() {
+  constructor() {
     this.isServer = typeof window === 'undefined';
-    
     if (this.isServer) {
-      // Only setup file logging on server
-      const fs = require('fs');
-      const path = require('path');
-      this.logDir = path.join(process.cwd(), 'logs');
-      this.ensureLogDirectory(fs);
-      this.currentLogFile = this.getLogFilePath(path);
+      this.ensureLogDirectory();
+      this.currentLogFile = this.getLogFilePath();
     }
   }
 
@@ -26,21 +21,34 @@ class Logger {
     return Logger.instance;
   }
 
-  private ensureLogDirectory(fs: any) {
+  private ensureLogDirectory() {
+    const fs = require('fs');
     if (!fs.existsSync(this.logDir)) {
       fs.mkdirSync(this.logDir, { recursive: true });
     }
   }
 
-  private getLogFilePath(path: any): string {
+  private getLogFilePath() {
     const date = format(new Date(), 'yyyy-MM-dd');
-    return path.join(this.logDir, `crm-${date}.log`);
+    return `${this.logDir}/crm-${date}.log`;
   }
 
   private formatMessage(level: string, message: string, data?: any): string {
-    const timestamp = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
-    const dataStr = data ? `\nData: ${JSON.stringify(data, null, 2)}` : '';
-    return `[${timestamp}] ${level}: ${message}${dataStr}\n`;
+    const timestamp = new Date().toISOString();
+    const formattedData = data ? 
+      '\nData: ' + JSON.stringify(data, (key, value) => {
+        // Handle potential circular references and format JSON content
+        if (typeof value === 'string') {
+          try {
+            return JSON.parse(value);
+          } catch {
+            return value;
+          }
+        }
+        return value;
+      }, 2) : '';
+    
+    return `[${timestamp}] ${level.toUpperCase()}: ${message}${formattedData}\n`;
   }
 
   private writeToFile(message: string) {
@@ -48,13 +56,6 @@ class Logger {
 
     // Dynamic import on server side
     const fs = require('fs');
-    const path = require('path');
-
-    // Check if we need to rotate to a new log file
-    const newLogFile = this.getLogFilePath(path);
-    if (newLogFile !== this.currentLogFile) {
-      this.currentLogFile = newLogFile;
-    }
 
     fs.appendFileSync(this.currentLogFile, message);
   }

@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const lastMessage = messages[messages.length - 1];
 
     const chatService = ChatService.getInstance({
-      model: process.env.OPENAI_MODEL || 'gpt-4',
+      model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
       maxContextMessages: 10,
       maxResponseTokens: 500,
       apiKey: process.env.OPENAI_API_KEY!

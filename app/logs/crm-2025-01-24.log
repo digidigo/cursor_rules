@@ -1742,3 +1742,2264 @@ Data: {
   "message": "Do not know how to serialize a BigInt",
   "stack": "TypeError: Do not know how to serialize a BigInt\n    at JSON.stringify (<anonymous>)\n    at ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:457:287)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:371:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:709:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
 }
+[2025-01-24 20:25:28] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": "1737775528588",
+      "timestamp": "2025-01-25T03:25:28.588Z"
+    }
+  ]
+}
+[2025-01-24 20:25:33] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "",
+      "secondary_table": null,
+      "operation": "",
+      "status": "success",
+      "summary": "As a CRM assistant, I can help you manage your data in the User and _prisma_migrations tables. You can ask me to perform various operations such as: \n\n1. Inserting new data into a table (e.g., adding a new user).\n2. Retrieving data from a table (e.g., getting a list of all users or migrations).\n3. Updating existing data in a table (e.g., changing a user's email).\n4. Deleting data from a table (e.g., removing a user).\n\nAll you need to do is provide your request in natural language, and I will convert it into the appropriate SQLite operation.",
+      "sql": ""
+    }
+  }
+}
+[2025-01-24 20:29:43] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": "1737775783547",
+      "timestamp": "2025-01-25T03:29:43.547Z"
+    }
+  ]
+}
+[2025-01-24 20:29:43] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\n\nYour role is to convert natural language requests into SQLite operations.\nYou will receive the database schema and user's request.\nThe schema will be provided as a JSON array of table definitions.\n\nFor questions about capabilities or schema information:\n- Return type: \"schema\"\n- Set sql field to empty string\n- Provide detailed explanation in summary field\n\nFor data operations:\n- Return type: \"operation\"\n- Use proper SQLite syntax\n- Consider relationships between tables\n\nSchema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-24 20:29:48] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 395,
+    "completion_tokens": 135,
+    "total_tokens": 530,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"\",\n    \"secondary_table\": null,\n    \"operation\": \"\",\n    \"status\": \"success\",\n    \"summary\": \"As a CRM assistant, I can help you manage your data in SQLite databases. I can perform various operations such as SELECT, INSERT, UPDATE, and DELETE on your data. You can ask me to retrieve data, add new data, update existing data, or remove data from your database. I can also help you understand the schema of your database, which includes the structure of your tables and the relationships between them.\",\n    \"sql\": \"\"\n  }\n}"
+}
+[2025-01-24 20:29:48] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "",
+      "secondary_table": null,
+      "operation": "",
+      "status": "success",
+      "summary": "As a CRM assistant, I can help you manage your data in SQLite databases. I can perform various operations such as SELECT, INSERT, UPDATE, and DELETE on your data. You can ask me to retrieve data, add new data, update existing data, or remove data from your database. I can also help you understand the schema of your database, which includes the structure of your tables and the relationships between them.",
+      "sql": ""
+    }
+  }
+}
+[2025-01-24 20:29:53] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": "1737775783405",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:29:43.405Z"
+    },
+    {
+      "id": "1737775788504",
+      "role": "assistant",
+      "content": "As a CRM assistant, I can help you manage your data in SQLite databases. I can perform various operations such as SELECT, INSERT, UPDATE, and DELETE on your data. You can ask me to retrieve data, add new data, update existing data, or remove data from your database. I can also help you understand the schema of your database, which includes the structure of your tables and the relationships between them.",
+      "timestamp": "2025-01-25T03:29:48.503Z"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?",
+      "id": "1737775793562",
+      "timestamp": "2025-01-25T03:29:53.562Z"
+    }
+  ]
+}
+[2025-01-24 20:29:53] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\n\nYour role is to convert natural language requests into SQLite operations.\nYou will receive the database schema and user's request.\nThe schema will be provided as a JSON array of table definitions.\n\nFor questions about capabilities or schema information:\n- Return type: \"schema\"\n- Set sql field to empty string\n- Provide detailed explanation in summary field\n\nFor data operations:\n- Return type: \"operation\"\n- Use proper SQLite syntax\n- Consider relationships between tables\n\nSchema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-24 20:29:55] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 397,
+    "completion_tokens": 69,
+    "total_tokens": 466,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": "{\n  \"type\": \"operation\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"Count the total number of users\",\n    \"sql\": \"SELECT COUNT(*) FROM User\"\n  }\n}"
+}
+[2025-01-24 20:29:55] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "Count the total number of users",
+      "sql": "SELECT COUNT(*) FROM User"
+    }
+  }
+}
+[2025-01-24 20:29:55] ERROR: SQL execution failed
+Data: {
+  "message": "Do not know how to serialize a BigInt",
+  "stack": "TypeError: Do not know how to serialize a BigInt\n    at JSON.stringify (<anonymous>)\n    at ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:461:283)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:366:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:727:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-24 20:32:21] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": "1737775941637",
+      "timestamp": "2025-01-25T03:32:21.637Z"
+    }
+  ]
+}
+[2025-01-24 20:32:21] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\n\nYour role is to convert natural language requests into SQLite operations.\nYou will receive the database schema and user's request.\nThe schema will be provided as a JSON array of table definitions.\n\nFor questions about capabilities or schema information:\n- Return type: \"schema\"\n- Set sql field to empty string\n- Provide detailed explanation in summary field\n\nFor data operations:\n- Return type: \"operation\"\n- Use proper SQLite syntax\n- Consider relationships between tables\n\nSchema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (     id TEXT NOT NULL PRIMARY KEY,     email TEXT NOT NULL,     name TEXT,     createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,     updatedAt DATETIME NOT NULL )\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE _prisma_migrations (     id                    TEXT PRIMARY KEY NOT NULL,     checksum              TEXT NOT NULL,     finished_at           DATETIME,     migration_name        TEXT NOT NULL,     logs                  TEXT,     rolled_back_at        DATETIME,     started_at            DATETIME NOT NULL DEFAULT current_timestamp,     applied_steps_count   INTEGER UNSIGNED NOT NULL DEFAULT 0 )\"\n  }\n]\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-24 20:32:28] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 351,
+    "completion_tokens": 146,
+    "total_tokens": 497,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"\",\n    \"secondary_table\": null,\n    \"operation\": \"\",\n    \"status\": \"success\",\n    \"summary\": \"As a CRM assistant, I can help you manage your data in the User and _prisma_migrations tables. You can ask me to perform various operations such as: \\n1. Inserting new records into a table. \\n2. Updating existing records in a table. \\n3. Deleting records from a table. \\n4. Retrieving data from a table. \\nPlease provide me with the details of the operation you want to perform.\",\n    \"sql\": \"\"\n  }\n}"
+}
+[2025-01-24 20:32:28] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "",
+      "secondary_table": null,
+      "operation": "",
+      "status": "success",
+      "summary": "As a CRM assistant, I can help you manage your data in the User and _prisma_migrations tables. You can ask me to perform various operations such as: \n1. Inserting new records into a table. \n2. Updating existing records in a table. \n3. Deleting records from a table. \n4. Retrieving data from a table. \nPlease provide me with the details of the operation you want to perform.",
+      "sql": ""
+    }
+  }
+}
+[2025-01-24 20:32:34] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": "1737775941510",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:32:21.510Z"
+    },
+    {
+      "id": "1737775948048",
+      "role": "assistant",
+      "content": "As a CRM assistant, I can help you manage your data in the User and _prisma_migrations tables. You can ask me to perform various operations such as: \n1. Inserting new records into a table. \n2. Updating existing records in a table. \n3. Deleting records from a table. \n4. Retrieving data from a table. \nPlease provide me with the details of the operation you want to perform.",
+      "timestamp": "2025-01-25T03:32:28.047Z"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?",
+      "id": "1737775954828",
+      "timestamp": "2025-01-25T03:32:34.828Z"
+    }
+  ]
+}
+[2025-01-24 20:32:34] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\n\nYour role is to convert natural language requests into SQLite operations.\nYou will receive the database schema and user's request.\nThe schema will be provided as a JSON array of table definitions.\n\nFor questions about capabilities or schema information:\n- Return type: \"schema\"\n- Set sql field to empty string\n- Provide detailed explanation in summary field\n\nFor data operations:\n- Return type: \"operation\"\n- Use proper SQLite syntax\n- Consider relationships between tables\n\nSchema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (     id TEXT NOT NULL PRIMARY KEY,     email TEXT NOT NULL,     name TEXT,     createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,     updatedAt DATETIME NOT NULL )\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE _prisma_migrations (     id                    TEXT PRIMARY KEY NOT NULL,     checksum              TEXT NOT NULL,     finished_at           DATETIME,     migration_name        TEXT NOT NULL,     logs                  TEXT,     rolled_back_at        DATETIME,     started_at            DATETIME NOT NULL DEFAULT current_timestamp,     applied_steps_count   INTEGER UNSIGNED NOT NULL DEFAULT 0 )\"\n  }\n]\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-24 20:32:37] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 353,
+    "completion_tokens": 69,
+    "total_tokens": 422,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": "{\n  \"type\": \"operation\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"Count the total number of users\",\n    \"sql\": \"SELECT COUNT(*) FROM User\"\n  }\n}"
+}
+[2025-01-24 20:32:37] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "Count the total number of users",
+      "sql": "SELECT COUNT(*) FROM User"
+    }
+  }
+}
+[2025-01-24 20:32:37] ERROR: SQL execution failed
+Data: {
+  "message": "Do not know how to serialize a BigInt",
+  "stack": "TypeError: Do not know how to serialize a BigInt\n    at JSON.stringify (<anonymous>)\n    at ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:466:283)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:366:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:739:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-24 20:36:05] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": "1737776165196",
+      "timestamp": "2025-01-25T03:36:05.196Z"
+    }
+  ]
+}
+[2025-01-24 20:36:05] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that converts natural language requests into SQLite operations.\n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation of the schema or capability\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper SQLite syntax\",\n    \"primaryTable\": \"The main table being queried\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User ( id TEXT NOT NULL PRIMARY KEY, email TEXT NOT NULL, name TEXT, createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, updatedAt DATETIME NOT NULL )\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE _prisma_migrations ( id TEXT PRIMARY KEY NOT NULL, checksum TEXT NOT NULL, finished_at DATETIME, migration_name TEXT NOT NULL, logs TEXT, rolled_back_at DATETIME, started_at DATETIME NOT NULL DEFAULT current_timestamp, applied_steps_count INTEGER UNSIGNED NOT NULL DEFAULT 0 )\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-24 20:36:09] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 351,
+    "completion_tokens": 135,
+    "total_tokens": 486,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"This CRM assistant can convert natural language requests into SQLite operations. It can perform various operations on two tables: 'User' and '_prisma_migrations'. The 'User' table has fields 'id', 'email', 'name', 'createdAt', and 'updatedAt'. The '_prisma_migrations' table has fields 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', and 'applied_steps_count'. Operations can include creating, reading, updating, and deleting records in these tables.\"\n  }\n}"
+}
+[2025-01-24 20:36:09] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "summary": "This CRM assistant can convert natural language requests into SQLite operations. It can perform various operations on two tables: 'User' and '_prisma_migrations'. The 'User' table has fields 'id', 'email', 'name', 'createdAt', and 'updatedAt'. The '_prisma_migrations' table has fields 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', and 'applied_steps_count'. Operations can include creating, reading, updating, and deleting records in these tables."
+    }
+  }
+}
+[2025-01-24 20:36:20] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": "1737776165064",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:36:05.064Z"
+    },
+    {
+      "id": "1737776169844",
+      "role": "assistant",
+      "content": "This CRM assistant can convert natural language requests into SQLite operations. It can perform various operations on two tables: 'User' and '_prisma_migrations'. The 'User' table has fields 'id', 'email', 'name', 'createdAt', and 'updatedAt'. The '_prisma_migrations' table has fields 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', and 'applied_steps_count'. Operations can include creating, reading, updating, and deleting records in these tables.",
+      "timestamp": "2025-01-25T03:36:09.843Z"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": "1737776180331",
+      "timestamp": "2025-01-25T03:36:20.331Z"
+    }
+  ]
+}
+[2025-01-24 20:36:20] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that converts natural language requests into SQLite operations.\n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation of the schema or capability\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper SQLite syntax\",\n    \"primaryTable\": \"The main table being queried\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User ( id TEXT NOT NULL PRIMARY KEY, email TEXT NOT NULL, name TEXT, createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, updatedAt DATETIME NOT NULL )\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE _prisma_migrations ( id TEXT PRIMARY KEY NOT NULL, checksum TEXT NOT NULL, finished_at DATETIME, migration_name TEXT NOT NULL, logs TEXT, rolled_back_at DATETIME, started_at DATETIME NOT NULL DEFAULT current_timestamp, applied_steps_count INTEGER UNSIGNED NOT NULL DEFAULT 0 )\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-24 20:36:24] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 351,
+    "completion_tokens": 135,
+    "total_tokens": 486,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"This CRM assistant can convert natural language requests into SQLite operations. It can perform various operations on two tables: 'User' and '_prisma_migrations'. The 'User' table has fields 'id', 'email', 'name', 'createdAt', and 'updatedAt'. The '_prisma_migrations' table has fields 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', and 'applied_steps_count'. Operations can include creating, reading, updating, and deleting records in these tables.\"\n  }\n}"
+}
+[2025-01-24 20:36:24] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "summary": "This CRM assistant can convert natural language requests into SQLite operations. It can perform various operations on two tables: 'User' and '_prisma_migrations'. The 'User' table has fields 'id', 'email', 'name', 'createdAt', and 'updatedAt'. The '_prisma_migrations' table has fields 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', and 'applied_steps_count'. Operations can include creating, reading, updating, and deleting records in these tables."
+    }
+  }
+}
+[2025-01-24 20:39:46] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": "1737776165064",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:36:05.064Z"
+    },
+    {
+      "id": "1737776169844",
+      "role": "assistant",
+      "content": "This CRM assistant can convert natural language requests into SQLite operations. It can perform various operations on two tables: 'User' and '_prisma_migrations'. The 'User' table has fields 'id', 'email', 'name', 'createdAt', and 'updatedAt'. The '_prisma_migrations' table has fields 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', and 'applied_steps_count'. Operations can include creating, reading, updating, and deleting records in these tables.",
+      "timestamp": "2025-01-25T03:36:09.843Z"
+    },
+    {
+      "id": "1737776180298",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:36:20.298Z"
+    },
+    {
+      "id": "1737776184690",
+      "role": "assistant",
+      "content": "This CRM assistant can convert natural language requests into SQLite operations. It can perform various operations on two tables: 'User' and '_prisma_migrations'. The 'User' table has fields 'id', 'email', 'name', 'createdAt', and 'updatedAt'. The '_prisma_migrations' table has fields 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', and 'applied_steps_count'. Operations can include creating, reading, updating, and deleting records in these tables.",
+      "timestamp": "2025-01-25T03:36:24.689Z"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": "1737776386207",
+      "timestamp": "2025-01-25T03:39:46.207Z"
+    }
+  ]
+}
+[2025-01-24 20:39:46] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that converts natural language requests into SQLite operations.\n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation of the schema or capability\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper SQLite syntax\",\n    \"primaryTable\": \"The main table being queried\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-24 20:39:52] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 302,
+    "completion_tokens": 127,
+    "total_tokens": 429,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"This database contains a single table named 'User'. The 'User' table has the following fields: 'id' which is a text field and serves as the primary key, 'email' which is a unique text field, 'name' which is a text field, 'createdAt' which is a text field that defaults to the current timestamp, and 'updatedAt' which is a text field that also defaults to the current timestamp. You can perform various operations such as SELECT, INSERT, UPDATE, and DELETE on this table.\"\n  }\n}"
+}
+[2025-01-24 20:39:52] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "summary": "This database contains a single table named 'User'. The 'User' table has the following fields: 'id' which is a text field and serves as the primary key, 'email' which is a unique text field, 'name' which is a text field, 'createdAt' which is a text field that defaults to the current timestamp, and 'updatedAt' which is a text field that also defaults to the current timestamp. You can perform various operations such as SELECT, INSERT, UPDATE, and DELETE on this table."
+    }
+  }
+}
+[2025-01-24 20:42:00] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": "1737776165064",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:36:05.064Z"
+    },
+    {
+      "id": "1737776169844",
+      "role": "assistant",
+      "content": "This CRM assistant can convert natural language requests into SQLite operations. It can perform various operations on two tables: 'User' and '_prisma_migrations'. The 'User' table has fields 'id', 'email', 'name', 'createdAt', and 'updatedAt'. The '_prisma_migrations' table has fields 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', and 'applied_steps_count'. Operations can include creating, reading, updating, and deleting records in these tables.",
+      "timestamp": "2025-01-25T03:36:09.843Z"
+    },
+    {
+      "id": "1737776180298",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:36:20.298Z"
+    },
+    {
+      "id": "1737776184690",
+      "role": "assistant",
+      "content": "This CRM assistant can convert natural language requests into SQLite operations. It can perform various operations on two tables: 'User' and '_prisma_migrations'. The 'User' table has fields 'id', 'email', 'name', 'createdAt', and 'updatedAt'. The '_prisma_migrations' table has fields 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', and 'applied_steps_count'. Operations can include creating, reading, updating, and deleting records in these tables.",
+      "timestamp": "2025-01-25T03:36:24.689Z"
+    },
+    {
+      "id": "1737776386077",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:39:46.077Z"
+    },
+    {
+      "id": "1737776392307",
+      "role": "assistant",
+      "content": "This database contains a single table named 'User'. The 'User' table has the following fields: 'id' which is a text field and serves as the primary key, 'email' which is a unique text field, 'name' which is a text field, 'createdAt' which is a text field that defaults to the current timestamp, and 'updatedAt' which is a text field that also defaults to the current timestamp. You can perform various operations such as SELECT, INSERT, UPDATE, and DELETE on this table.",
+      "timestamp": "2025-01-25T03:39:52.306Z"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?",
+      "id": "1737776520430",
+      "timestamp": "2025-01-25T03:42:00.430Z"
+    }
+  ]
+}
+[2025-01-24 20:42:00] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that converts natural language requests into SQLite operations.\n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation of the schema or capability\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper SQLite syntax\",\n    \"primaryTable\": \"The main table being queried\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-24 20:42:02] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 304,
+    "completion_tokens": 55,
+    "total_tokens": 359,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": "{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"SELECT COUNT(*) FROM User\",\n    \"primaryTable\": \"User\",\n    \"summary\": \"This query will count the total number of users in the User table.\"\n  }\n}"
+}
+[2025-01-24 20:42:02] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "sql": "SELECT COUNT(*) FROM User",
+      "primaryTable": "User",
+      "summary": "This query will count the total number of users in the User table."
+    }
+  }
+}
+[2025-01-24 20:42:02] ERROR: SQL execution failed
+Data: {
+  "message": "Do not know how to serialize a BigInt",
+  "stack": "TypeError: Do not know how to serialize a BigInt\n    at JSON.stringify (<anonymous>)\n    at ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:466:283)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:371:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:766:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-24 20:46:23] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": "1737776165064",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:36:05.064Z"
+    },
+    {
+      "id": "1737776169844",
+      "role": "assistant",
+      "content": "This CRM assistant can convert natural language requests into SQLite operations. It can perform various operations on two tables: 'User' and '_prisma_migrations'. The 'User' table has fields 'id', 'email', 'name', 'createdAt', and 'updatedAt'. The '_prisma_migrations' table has fields 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', and 'applied_steps_count'. Operations can include creating, reading, updating, and deleting records in these tables.",
+      "timestamp": "2025-01-25T03:36:09.843Z"
+    },
+    {
+      "id": "1737776180298",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:36:20.298Z"
+    },
+    {
+      "id": "1737776184690",
+      "role": "assistant",
+      "content": "This CRM assistant can convert natural language requests into SQLite operations. It can perform various operations on two tables: 'User' and '_prisma_migrations'. The 'User' table has fields 'id', 'email', 'name', 'createdAt', and 'updatedAt'. The '_prisma_migrations' table has fields 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', and 'applied_steps_count'. Operations can include creating, reading, updating, and deleting records in these tables.",
+      "timestamp": "2025-01-25T03:36:24.689Z"
+    },
+    {
+      "id": "1737776386077",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:39:46.077Z"
+    },
+    {
+      "id": "1737776392307",
+      "role": "assistant",
+      "content": "This database contains a single table named 'User'. The 'User' table has the following fields: 'id' which is a text field and serves as the primary key, 'email' which is a unique text field, 'name' which is a text field, 'createdAt' which is a text field that defaults to the current timestamp, and 'updatedAt' which is a text field that also defaults to the current timestamp. You can perform various operations such as SELECT, INSERT, UPDATE, and DELETE on this table.",
+      "timestamp": "2025-01-25T03:39:52.306Z"
+    },
+    {
+      "id": "1737776520386",
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T03:42:00.386Z"
+    },
+    {
+      "id": "1737776522625",
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T03:42:02.624Z"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?",
+      "id": "1737776783462",
+      "timestamp": "2025-01-25T03:46:23.462Z"
+    }
+  ]
+}
+[2025-01-24 20:46:23] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a Data assistant that converts natural language requests into Database operations.\n\n  The schema will tell you what type of database you are working with. \n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation types of data the user can manage. Use common language and avoid tehncial langague\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper syntax for the database type\",\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-24 20:46:27] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 371,
+    "completion_tokens": 76,
+    "total_tokens": 447,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": "{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"SELECT COUNT(*) FROM User\",\n    \"primaryTable\": \"User\",\n    \"secondaryTable\": null,\n    \"operation\": \"read\",\n    \"status\": \"pending\",\n    \"summary\": \"This query will count the total number of users in the User table\"\n  }\n}"
+}
+[2025-01-24 20:46:27] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "sql": "SELECT COUNT(*) FROM User",
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "read",
+      "status": "pending",
+      "summary": "This query will count the total number of users in the User table"
+    }
+  }
+}
+[2025-01-24 20:46:27] ERROR: SQL execution failed
+Data: {
+  "message": "Do not know how to serialize a BigInt",
+  "stack": "TypeError: Do not know how to serialize a BigInt\n    at JSON.stringify (<anonymous>)\n    at ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:471:283)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:376:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:771:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-25T03:48:36.161Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": 1737776916161,
+      "timestamp": "2025-01-25T03:48:36.161Z"
+    }
+  ]
+}
+[2025-01-25T03:48:36.161Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a Data assistant that converts natural language requests into Database operations.\n\n  The schema will tell you what type of database you are working with. \n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation types of data the user can manage. Use common language and avoid tehncial langague\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper syntax for the database type\",\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T03:48:39.071Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 369,
+    "completion_tokens": 71,
+    "total_tokens": 440,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "schema",
+    "response": {
+      "summary": "This database allows you to manage user data. You can add, update, and retrieve user information. Each user has a unique ID and email. Other information includes the user's name and the timestamps for when the user was created and last updated."
+    }
+  }
+}
+[2025-01-25T03:48:39.073Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "summary": "This database allows you to manage user data. You can add, update, and retrieve user information. Each user has a unique ID and email. Other information includes the user's name and the timestamps for when the user was created and last updated."
+    }
+  }
+}
+[2025-01-25T03:48:50.015Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": 1737776916021,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:48:36.021Z"
+    },
+    {
+      "id": 1737776919080,
+      "role": "assistant",
+      "content": "This database allows you to manage user data. You can add, update, and retrieve user information. Each user has a unique ID and email. Other information includes the user's name and the timestamps for when the user was created and last updated.",
+      "timestamp": "2025-01-25T03:48:39.079Z"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?",
+      "id": 1737776930014,
+      "timestamp": "2025-01-25T03:48:50.015Z"
+    }
+  ]
+}
+[2025-01-25T03:48:50.015Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a Data assistant that converts natural language requests into Database operations.\n\n  The schema will tell you what type of database you are working with. \n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation types of data the user can manage. Use common language and avoid tehncial langague\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper syntax for the database type\",\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T03:48:53.061Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 371,
+    "completion_tokens": 76,
+    "total_tokens": 447,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "operation",
+    "response": {
+      "sql": "SELECT COUNT(*) FROM User",
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "read",
+      "status": "pending",
+      "summary": "This query will count the total number of users in the User table"
+    }
+  }
+}
+[2025-01-25T03:48:53.063Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "sql": "SELECT COUNT(*) FROM User",
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "read",
+      "status": "pending",
+      "summary": "This query will count the total number of users in the User table"
+    }
+  }
+}
+[2025-01-25T03:48:53.066Z] ERROR: SQL execution failed
+Data: {
+  "message": "Do not know how to serialize a BigInt",
+  "stack": "TypeError: Do not know how to serialize a BigInt\n    at JSON.stringify (<anonymous>)\n    at ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:473:283)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:378:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:773:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-25T03:51:20.296Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": 1737776916021,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:48:36.021Z"
+    },
+    {
+      "id": 1737776919080,
+      "role": "assistant",
+      "content": "This database allows you to manage user data. You can add, update, and retrieve user information. Each user has a unique ID and email. Other information includes the user's name and the timestamps for when the user was created and last updated.",
+      "timestamp": "2025-01-25T03:48:39.079Z"
+    },
+    {
+      "id": 1737776929982,
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T03:48:49.982Z"
+    },
+    {
+      "id": 1737776933071,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T03:48:53.070Z"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?",
+      "id": 1737777080296,
+      "timestamp": "2025-01-25T03:51:20.296Z"
+    }
+  ]
+}
+[2025-01-25T03:51:20.296Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a Data assistant that converts natural language requests into Database operations.\n\n  The schema will tell you what type of database you are working with. \n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation types of data the user can manage. Use common language and avoid tehncial langague\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper syntax for the database type\",\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T03:51:23.358Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 371,
+    "completion_tokens": 76,
+    "total_tokens": 447,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "operation",
+    "response": {
+      "sql": "SELECT COUNT(*) FROM User",
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "read",
+      "status": "pending",
+      "summary": "This query will count the total number of users in the User table"
+    }
+  }
+}
+[2025-01-25T03:51:23.359Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "sql": "SELECT COUNT(*) FROM User",
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "read",
+      "status": "pending",
+      "summary": "This query will count the total number of users in the User table"
+    }
+  }
+}
+[2025-01-25T03:51:23.362Z] INFO: Sending summary prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a database expert. Explain query results in clear, natural language."
+    },
+    {
+      "role": "user",
+      "content": "Summarize the results of this SQL query in a clear, business-focused way:\n\nSQL: SELECT COUNT(*) FROM User\nResult: [\n  {\n    \"COUNT(*)\": \"0\"\n  }\n]"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T03:51:24.443Z] INFO: Received summary response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 67,
+    "completion_tokens": 30,
+    "total_tokens": 97,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": "The SQL query was run to determine the total number of users in the database. The result indicates that there are currently no users in the database."
+}
+[2025-01-25T03:51:49.864Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": 1737776916021,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:48:36.021Z"
+    },
+    {
+      "id": 1737776919080,
+      "role": "assistant",
+      "content": "This database allows you to manage user data. You can add, update, and retrieve user information. Each user has a unique ID and email. Other information includes the user's name and the timestamps for when the user was created and last updated.",
+      "timestamp": "2025-01-25T03:48:39.079Z"
+    },
+    {
+      "id": 1737776929982,
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T03:48:49.982Z"
+    },
+    {
+      "id": 1737776933071,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T03:48:53.070Z"
+    },
+    {
+      "id": 1737777080156,
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T03:51:20.156Z"
+    },
+    {
+      "id": 1737777084449,
+      "role": "assistant",
+      "content": "This query will count the total number of users in the User table\n\nResult: The SQL query was run to determine the total number of users in the database. The result indicates that there are currently no users in the database.",
+      "timestamp": "2025-01-25T03:51:24.448Z"
+    },
+    {
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "id": 1737777109864,
+      "timestamp": "2025-01-25T03:51:49.864Z"
+    }
+  ]
+}
+[2025-01-25T03:51:49.865Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a Data assistant that converts natural language requests into Database operations.\n\n  The schema will tell you what type of database you are working with. \n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation types of data the user can manage. Use common language and avoid tehncial langague\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper syntax for the database type\",\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "Add a user for John Smith"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T03:51:52.671Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 370,
+    "completion_tokens": 87,
+    "total_tokens": 457,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "operation",
+    "response": {
+      "sql": "INSERT INTO User (id, name) VALUES (?, ?)",
+      "primaryTable": "User",
+      "operation": "insert",
+      "status": "pending",
+      "summary": "This query will add a new user with the name 'John Smith' into the User table. The id will be automatically generated."
+    }
+  }
+}
+[2025-01-25T03:51:52.673Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "sql": "INSERT INTO User (id, name) VALUES (?, ?)",
+      "primaryTable": "User",
+      "operation": "insert",
+      "status": "pending",
+      "summary": "This query will add a new user with the name 'John Smith' into the User table. The id will be automatically generated."
+    }
+  }
+}
+[2025-01-25T03:51:52.679Z] ERROR: SQL execution failed
+Data: {
+  "message": "\nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `N/A`. Message: `N/A`",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `N/A`. Message: `N/A`\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:7339)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async ChatService.executeSQL (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:413:24)\n    at async ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:474:32)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:378:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:777:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-25T03:52:02.365Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": 1737776916021,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:48:36.021Z"
+    },
+    {
+      "id": 1737776919080,
+      "role": "assistant",
+      "content": "This database allows you to manage user data. You can add, update, and retrieve user information. Each user has a unique ID and email. Other information includes the user's name and the timestamps for when the user was created and last updated.",
+      "timestamp": "2025-01-25T03:48:39.079Z"
+    },
+    {
+      "id": 1737776929982,
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T03:48:49.982Z"
+    },
+    {
+      "id": 1737776933071,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T03:48:53.070Z"
+    },
+    {
+      "id": 1737777080156,
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T03:51:20.156Z"
+    },
+    {
+      "id": 1737777084449,
+      "role": "assistant",
+      "content": "This query will count the total number of users in the User table\n\nResult: The SQL query was run to determine the total number of users in the database. The result indicates that there are currently no users in the database.",
+      "timestamp": "2025-01-25T03:51:24.448Z"
+    },
+    {
+      "id": 1737777109820,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T03:51:49.820Z"
+    },
+    {
+      "id": 1737777112685,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: Sorry, I couldn't process that database operation. Please check your input and try again.",
+      "timestamp": "2025-01-25T03:51:52.684Z"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": 1737777122365,
+      "timestamp": "2025-01-25T03:52:02.365Z"
+    }
+  ]
+}
+[2025-01-25T03:52:02.366Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a Data assistant that converts natural language requests into Database operations.\n\n  The schema will tell you what type of database you are working with. \n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation types of data the user can manage. Use common language and avoid tehncial langague\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper syntax for the database type\",\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T03:52:04.974Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 369,
+    "completion_tokens": 74,
+    "total_tokens": 443,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "schema",
+    "response": {
+      "summary": "This database allows you to manage user data. You can add, update, and retrieve information about users. The data you can manage includes a unique identifier for each user, their email address, name, and the dates when the user was created and last updated."
+    }
+  }
+}
+[2025-01-25T03:52:04.976Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "summary": "This database allows you to manage user data. You can add, update, and retrieve information about users. The data you can manage includes a unique identifier for each user, their email address, name, and the dates when the user was created and last updated."
+    }
+  }
+}
+[2025-01-25T03:55:11.858Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": 1737776919080,
+      "role": "assistant",
+      "content": "This database allows you to manage user data. You can add, update, and retrieve user information. Each user has a unique ID and email. Other information includes the user's name and the timestamps for when the user was created and last updated.",
+      "timestamp": "2025-01-25T03:48:39.079Z"
+    },
+    {
+      "id": 1737776929982,
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T03:48:49.982Z"
+    },
+    {
+      "id": 1737776933071,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T03:48:53.070Z"
+    },
+    {
+      "id": 1737777080156,
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T03:51:20.156Z"
+    },
+    {
+      "id": 1737777084449,
+      "role": "assistant",
+      "content": "This query will count the total number of users in the User table\n\nResult: The SQL query was run to determine the total number of users in the database. The result indicates that there are currently no users in the database.",
+      "timestamp": "2025-01-25T03:51:24.448Z"
+    },
+    {
+      "id": 1737777109820,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T03:51:49.820Z"
+    },
+    {
+      "id": 1737777112685,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: Sorry, I couldn't process that database operation. Please check your input and try again.",
+      "timestamp": "2025-01-25T03:51:52.684Z"
+    },
+    {
+      "id": 1737777122321,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:52:02.321Z"
+    },
+    {
+      "id": 1737777124983,
+      "role": "assistant",
+      "content": "This database allows you to manage user data. You can add, update, and retrieve information about users. The data you can manage includes a unique identifier for each user, their email address, name, and the dates when the user was created and last updated.",
+      "timestamp": "2025-01-25T03:52:04.982Z"
+    },
+    {
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "id": 1737777311858,
+      "timestamp": "2025-01-25T03:55:11.858Z"
+    }
+  ]
+}
+[2025-01-25T03:55:11.859Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a Data assistant that converts natural language requests into Database operations.\n\n  The schema will tell you what type of database you are working with. \n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation types of data the user can manage. Use common language and avoid tehncial langague\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper syntax for the database type\",\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "Add a user for John Smith"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T03:55:15.877Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 370,
+    "completion_tokens": 152,
+    "total_tokens": 522,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "operation",
+    "response": {
+      "sql": "INSERT INTO User (id, email, name, createdAt, updatedAt) VALUES (?, ?, 'John Smith', strftime('%Y-%m-%d %H:%M:%f', 'now'), strftime('%Y-%m-%d %H:%M:%f', 'now'))",
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "insert",
+      "status": "pending",
+      "summary": "This operation will insert a new user named 'John Smith' into the User table. The id and email will be provided as parameters. The createdAt and updatedAt fields will be set to the current timestamp."
+    }
+  }
+}
+[2025-01-25T03:55:15.880Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "sql": "INSERT INTO User (id, email, name, createdAt, updatedAt) VALUES (?, ?, 'John Smith', strftime('%Y-%m-%d %H:%M:%f', 'now'), strftime('%Y-%m-%d %H:%M:%f', 'now'))",
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "insert",
+      "status": "pending",
+      "summary": "This operation will insert a new user named 'John Smith' into the User table. The id and email will be provided as parameters. The createdAt and updatedAt fields will be set to the current timestamp."
+    }
+  }
+}
+[2025-01-25T03:55:15.893Z] ERROR: SQL execution failed
+Data: {
+  "message": "\nInvalid `this.prisma[tableName].create()` invocation in\n/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:436:61\n\n  433     return acc;\n  434 }, {});\n  435 // Use Prisma's create method\n→ 436 const result = await this.prisma[tableName].create({\n        data: {\n          name: undefined,\n      +   email: String\n        }\n      })\n\nArgument `email` is missing.",
+  "stack": "PrismaClientValidationError: \nInvalid `this.prisma[tableName].create()` invocation in\n/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:436:61\n\n  433     return acc;\n  434 }, {});\n  435 // Use Prisma's create method\n→ 436 const result = await this.prisma[tableName].create({\n        data: {\n          name: undefined,\n      +   email: String\n        }\n      })\n\nArgument `email` is missing.\n    at wn (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:29:1363)\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6982)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async ChatService.executeSQL (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:436:32)\n    at async ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:752:32)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:378:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:841:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-25T03:55:15.893Z] ERROR: SQL execution failed
+Data: {
+  "message": "\nInvalid `this.prisma[tableName].create()` invocation in\n/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:436:61\n\n  433     return acc;\n  434 }, {});\n  435 // Use Prisma's create method\n→ 436 const result = await this.prisma[tableName].create({\n        data: {\n          name: undefined,\n      +   email: String\n        }\n      })\n\nArgument `email` is missing.",
+  "stack": "PrismaClientValidationError: \nInvalid `this.prisma[tableName].create()` invocation in\n/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:436:61\n\n  433     return acc;\n  434 }, {});\n  435 // Use Prisma's create method\n→ 436 const result = await this.prisma[tableName].create({\n        data: {\n          name: undefined,\n      +   email: String\n        }\n      })\n\nArgument `email` is missing.\n    at wn (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:29:1363)\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6982)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async ChatService.executeSQL (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:436:32)\n    at async ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:752:32)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:378:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__0b1bb1._.js:841:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-25T04:00:00.614Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": 1737776933071,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T03:48:53.070Z"
+    },
+    {
+      "id": 1737777080156,
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T03:51:20.156Z"
+    },
+    {
+      "id": 1737777084449,
+      "role": "assistant",
+      "content": "This query will count the total number of users in the User table\n\nResult: The SQL query was run to determine the total number of users in the database. The result indicates that there are currently no users in the database.",
+      "timestamp": "2025-01-25T03:51:24.448Z"
+    },
+    {
+      "id": 1737777109820,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T03:51:49.820Z"
+    },
+    {
+      "id": 1737777112685,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: Sorry, I couldn't process that database operation. Please check your input and try again.",
+      "timestamp": "2025-01-25T03:51:52.684Z"
+    },
+    {
+      "id": 1737777122321,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:52:02.321Z"
+    },
+    {
+      "id": 1737777124983,
+      "role": "assistant",
+      "content": "This database allows you to manage user data. You can add, update, and retrieve information about users. The data you can manage includes a unique identifier for each user, their email address, name, and the dates when the user was created and last updated.",
+      "timestamp": "2025-01-25T03:52:04.982Z"
+    },
+    {
+      "id": 1737777311712,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T03:55:11.712Z"
+    },
+    {
+      "id": 1737777315897,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T03:55:15.896Z"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": 1737777600614,
+      "timestamp": "2025-01-25T04:00:00.614Z"
+    }
+  ]
+}
+[2025-01-25T04:00:00.616Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a Data assistant that converts natural language requests into Database operations.\n\n  The schema will tell you what type of database you are working with. \n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation types of data the user can manage. Use common language and avoid tehncial langague\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper syntax for the database type\",\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T04:00:04.394Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 469,
+    "completion_tokens": 112,
+    "total_tokens": 581,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "schema",
+    "response": {
+      "summary": "This database allows you to manage user data and track database migrations. In the 'User' table, you can store and manage data such as user ID, email, name, and the timestamps of when the user data was created or updated. The '_prisma_migrations' table is used to track changes to the database structure itself, including the name of the migration, when it started, finished, or was rolled back, and any associated logs."
+    }
+  }
+}
+[2025-01-25T04:00:04.396Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "summary": "This database allows you to manage user data and track database migrations. In the 'User' table, you can store and manage data such as user ID, email, name, and the timestamps of when the user data was created or updated. The '_prisma_migrations' table is used to track changes to the database structure itself, including the name of the migration, when it started, finished, or was rolled back, and any associated logs."
+    }
+  }
+}
+[2025-01-25T04:03:52.283Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": 1737777084449,
+      "role": "assistant",
+      "content": "This query will count the total number of users in the User table\n\nResult: The SQL query was run to determine the total number of users in the database. The result indicates that there are currently no users in the database.",
+      "timestamp": "2025-01-25T03:51:24.448Z"
+    },
+    {
+      "id": 1737777109820,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T03:51:49.820Z"
+    },
+    {
+      "id": 1737777112685,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: Sorry, I couldn't process that database operation. Please check your input and try again.",
+      "timestamp": "2025-01-25T03:51:52.684Z"
+    },
+    {
+      "id": 1737777122321,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:52:02.321Z"
+    },
+    {
+      "id": 1737777124983,
+      "role": "assistant",
+      "content": "This database allows you to manage user data. You can add, update, and retrieve information about users. The data you can manage includes a unique identifier for each user, their email address, name, and the dates when the user was created and last updated.",
+      "timestamp": "2025-01-25T03:52:04.982Z"
+    },
+    {
+      "id": 1737777311712,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T03:55:11.712Z"
+    },
+    {
+      "id": 1737777315897,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T03:55:15.896Z"
+    },
+    {
+      "id": 1737777600477,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T04:00:00.477Z"
+    },
+    {
+      "id": 1737777604402,
+      "role": "assistant",
+      "content": "This database allows you to manage user data and track database migrations. In the 'User' table, you can store and manage data such as user ID, email, name, and the timestamps of when the user data was created or updated. The '_prisma_migrations' table is used to track changes to the database structure itself, including the name of the migration, when it started, finished, or was rolled back, and any associated logs.",
+      "timestamp": "2025-01-25T04:00:04.401Z"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": 1737777832283,
+      "timestamp": "2025-01-25T04:03:52.283Z"
+    }
+  ]
+}
+[2025-01-25T04:03:52.284Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4o-mini",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a Data assistant that converts natural language requests into Database operations.\n\n  The schema will tell you what type of database you are working with. \n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation types of data the user can manage. Use common language and avoid tehncial langague\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper syntax for the database type\",\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T04:03:53.506Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 371,
+    "completion_tokens": 47,
+    "total_tokens": 418,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "schema",
+    "response": {
+      "summary": "You can manage user data, including their unique email addresses, names, and timestamps for when they were created and last updated."
+    }
+  }
+}
+[2025-01-25T04:03:53.506Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "summary": "You can manage user data, including their unique email addresses, names, and timestamps for when they were created and last updated."
+    }
+  }
+}
+[2025-01-25T04:03:58.144Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": 1737777112685,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: Sorry, I couldn't process that database operation. Please check your input and try again.",
+      "timestamp": "2025-01-25T03:51:52.684Z"
+    },
+    {
+      "id": 1737777122321,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:52:02.321Z"
+    },
+    {
+      "id": 1737777124983,
+      "role": "assistant",
+      "content": "This database allows you to manage user data. You can add, update, and retrieve information about users. The data you can manage includes a unique identifier for each user, their email address, name, and the dates when the user was created and last updated.",
+      "timestamp": "2025-01-25T03:52:04.982Z"
+    },
+    {
+      "id": 1737777311712,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T03:55:11.712Z"
+    },
+    {
+      "id": 1737777315897,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T03:55:15.896Z"
+    },
+    {
+      "id": 1737777600477,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T04:00:00.477Z"
+    },
+    {
+      "id": 1737777604402,
+      "role": "assistant",
+      "content": "This database allows you to manage user data and track database migrations. In the 'User' table, you can store and manage data such as user ID, email, name, and the timestamps of when the user data was created or updated. The '_prisma_migrations' table is used to track changes to the database structure itself, including the name of the migration, when it started, finished, or was rolled back, and any associated logs.",
+      "timestamp": "2025-01-25T04:00:04.401Z"
+    },
+    {
+      "id": 1737777832143,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T04:03:52.143Z"
+    },
+    {
+      "id": 1737777833509,
+      "role": "assistant",
+      "content": "You can manage user data, including their unique email addresses, names, and timestamps for when they were created and last updated.",
+      "timestamp": "2025-01-25T04:03:53.508Z"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?",
+      "id": 1737777838144,
+      "timestamp": "2025-01-25T04:03:58.144Z"
+    }
+  ]
+}
+[2025-01-25T04:03:58.145Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4o-mini",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a Data assistant that converts natural language requests into Database operations.\n\n  The schema will tell you what type of database you are working with. \n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation types of data the user can manage. Use common language and avoid tehncial langague\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper syntax for the database type\",\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T04:03:59.403Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 373,
+    "completion_tokens": 76,
+    "total_tokens": 449,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "operation",
+    "response": {
+      "sql": "SELECT COUNT(*) FROM User;",
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "count",
+      "status": "success",
+      "summary": "This query will count the total number of users in the User table."
+    }
+  }
+}
+[2025-01-25T04:03:59.405Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "sql": "SELECT COUNT(*) FROM User;",
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "count",
+      "status": "success",
+      "summary": "This query will count the total number of users in the User table."
+    }
+  }
+}
+[2025-01-25T04:03:59.410Z] INFO: Sending summary prompt to OpenAI
+Data: {
+  "model": "gpt-4o-mini",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a database expert. Explain query results in clear, natural language."
+    },
+    {
+      "role": "user",
+      "content": "Summarize the results of this SQL query in a clear, business-focused way:\n\nSQL: SELECT COUNT(*) FROM User;\nResult: [\n  {\n    \"COUNT(*)\": \"0\"\n  }\n]"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T04:04:00.842Z] INFO: Received summary response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 67,
+    "completion_tokens": 66,
+    "total_tokens": 133,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": "The SQL query indicates that there are currently no users in the database, as the count returned is zero. This suggests that the user registration process may not have been initiated, or there could be an issue preventing users from being added. It may be important to investigate further to understand the cause and take appropriate action to attract users."
+}
+[2025-01-25T04:04:11.387Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": 1737777124983,
+      "role": "assistant",
+      "content": "This database allows you to manage user data. You can add, update, and retrieve information about users. The data you can manage includes a unique identifier for each user, their email address, name, and the dates when the user was created and last updated.",
+      "timestamp": "2025-01-25T03:52:04.982Z"
+    },
+    {
+      "id": 1737777311712,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T03:55:11.712Z"
+    },
+    {
+      "id": 1737777315897,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T03:55:15.896Z"
+    },
+    {
+      "id": 1737777600477,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T04:00:00.477Z"
+    },
+    {
+      "id": 1737777604402,
+      "role": "assistant",
+      "content": "This database allows you to manage user data and track database migrations. In the 'User' table, you can store and manage data such as user ID, email, name, and the timestamps of when the user data was created or updated. The '_prisma_migrations' table is used to track changes to the database structure itself, including the name of the migration, when it started, finished, or was rolled back, and any associated logs.",
+      "timestamp": "2025-01-25T04:00:04.401Z"
+    },
+    {
+      "id": 1737777832143,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T04:03:52.143Z"
+    },
+    {
+      "id": 1737777833509,
+      "role": "assistant",
+      "content": "You can manage user data, including their unique email addresses, names, and timestamps for when they were created and last updated.",
+      "timestamp": "2025-01-25T04:03:53.508Z"
+    },
+    {
+      "id": 1737777838110,
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T04:03:58.110Z"
+    },
+    {
+      "id": 1737777840847,
+      "role": "assistant",
+      "content": "This query will count the total number of users in the User table.\n\nResult: The SQL query indicates that there are currently no users in the database, as the count returned is zero. This suggests that the user registration process may not have been initiated, or there could be an issue preventing users from being added. It may be important to investigate further to understand the cause and take appropriate action to attract users.",
+      "timestamp": "2025-01-25T04:04:00.846Z"
+    },
+    {
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "id": 1737777851387,
+      "timestamp": "2025-01-25T04:04:11.387Z"
+    }
+  ]
+}
+[2025-01-25T04:04:11.388Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4o-mini",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a Data assistant that converts natural language requests into Database operations.\n\n  The schema will tell you what type of database you are working with. \n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation types of data the user can manage. Use common language and avoid tehncial langague\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using proper syntax for the database type\",\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Use parameterized queries with ? placeholders\n3. Handle NULL values appropriately\n4. Format dates as ISO strings\n5. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n6. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "Add a user for John Smith"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T04:04:13.173Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 372,
+    "completion_tokens": 98,
+    "total_tokens": 470,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "operation",
+    "response": {
+      "sql": "INSERT INTO User (email, name) VALUES (?, ?)",
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "INSERT",
+      "status": "Pending",
+      "summary": "This query will add a new user named John Smith to the User table. The email field is not provided, so it will be set to NULL."
+    }
+  }
+}
+[2025-01-25T04:04:13.175Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "sql": "INSERT INTO User (email, name) VALUES (?, ?)",
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "INSERT",
+      "status": "Pending",
+      "summary": "This query will add a new user named John Smith to the User table. The email field is not provided, so it will be set to NULL."
+    }
+  }
+}
+[2025-01-25T04:04:13.177Z] ERROR: SQL execution failed
+Data: {
+  "message": "\nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `N/A`. Message: `N/A`",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `N/A`. Message: `N/A`\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:7339)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async SQLService.execute (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:265:28)\n    at async ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:758:32)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:476:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:847:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-25T04:04:13.177Z] ERROR: SQL execution failed
+Data: {
+  "message": "\nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `N/A`. Message: `N/A`",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `N/A`. Message: `N/A`\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:7339)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async SQLService.execute (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:265:28)\n    at async ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:758:32)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:476:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:847:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-25T04:08:08.883Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": 1737777315897,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T03:55:15.896Z"
+    },
+    {
+      "id": 1737777600477,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T04:00:00.477Z"
+    },
+    {
+      "id": 1737777604402,
+      "role": "assistant",
+      "content": "This database allows you to manage user data and track database migrations. In the 'User' table, you can store and manage data such as user ID, email, name, and the timestamps of when the user data was created or updated. The '_prisma_migrations' table is used to track changes to the database structure itself, including the name of the migration, when it started, finished, or was rolled back, and any associated logs.",
+      "timestamp": "2025-01-25T04:00:04.401Z"
+    },
+    {
+      "id": 1737777832143,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T04:03:52.143Z"
+    },
+    {
+      "id": 1737777833509,
+      "role": "assistant",
+      "content": "You can manage user data, including their unique email addresses, names, and timestamps for when they were created and last updated.",
+      "timestamp": "2025-01-25T04:03:53.508Z"
+    },
+    {
+      "id": 1737777838110,
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T04:03:58.110Z"
+    },
+    {
+      "id": 1737777840847,
+      "role": "assistant",
+      "content": "This query will count the total number of users in the User table.\n\nResult: The SQL query indicates that there are currently no users in the database, as the count returned is zero. This suggests that the user registration process may not have been initiated, or there could be an issue preventing users from being added. It may be important to investigate further to understand the cause and take appropriate action to attract users.",
+      "timestamp": "2025-01-25T04:04:00.846Z"
+    },
+    {
+      "id": 1737777851343,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T04:04:11.343Z"
+    },
+    {
+      "id": 1737777853182,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: Sorry, I couldn't process that database operation. Please check your input and try again.",
+      "timestamp": "2025-01-25T04:04:13.181Z"
+    },
+    {
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "id": 1737778088883,
+      "timestamp": "2025-01-25T04:08:08.883Z"
+    }
+  ]
+}
+[2025-01-25T04:08:08.884Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4o-mini",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that converts natural language requests into SQLite operations.\n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation of the schema or capability\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using ? for parameters\",\n    \"values\": [\"value1\", \"value2\"],\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Always use ? for parameter placeholders\n3. Provide values array in the exact order of the parameters\n4. Handle NULL values appropriately\n5. Format dates as ISO strings\n6. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n7. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "Add a user for John Smith"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T04:08:11.324Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 365,
+    "completion_tokens": 99,
+    "total_tokens": 464,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "operation",
+    "response": {
+      "sql": "INSERT INTO User (name) VALUES (?)",
+      "values": [
+        "John Smith"
+      ],
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "insert",
+      "status": "success",
+      "summary": "This query will insert a new user with the name 'John Smith' into the User table, automatically generating the id and timestamps."
+    }
+  }
+}
+[2025-01-25T04:08:11.326Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "sql": "INSERT INTO User (name) VALUES (?)",
+      "values": [
+        "John Smith"
+      ],
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "insert",
+      "status": "success",
+      "summary": "This query will insert a new user with the name 'John Smith' into the User table, automatically generating the id and timestamps."
+    }
+  }
+}
+[2025-01-25T04:08:11.327Z] DEBUG: Executing SQL
+Data: {
+  "sql": "INSERT INTO User (name) VALUES (?)",
+  "params": [
+    "John Smith"
+  ]
+}
+[2025-01-25T04:08:11.328Z] ERROR: SQL execution failed
+Data: {
+  "message": "Expected 2 strings to have 1 values",
+  "stack": "TypeError: Expected 2 strings to have 1 values\n    at new e (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:29:14537)\n    at Object.Ji [as sql] (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:29:15712)\n    at SQLService.execute (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:290:192)\n    at ChatService.executeSQL (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:536:32)\n    at ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:788:43)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:501:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:877:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-25T04:08:11.330Z] ERROR: SQL execution failed
+Data: {
+  "message": "Expected 2 strings to have 1 values",
+  "stack": "TypeError: Expected 2 strings to have 1 values\n    at new e (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:29:14537)\n    at Object.Ji [as sql] (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:29:15712)\n    at SQLService.execute (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:290:192)\n    at ChatService.executeSQL (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:536:32)\n    at ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:788:43)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:501:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__c389f0._.js:877:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-25T04:09:05.062Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": 1737777604402,
+      "role": "assistant",
+      "content": "This database allows you to manage user data and track database migrations. In the 'User' table, you can store and manage data such as user ID, email, name, and the timestamps of when the user data was created or updated. The '_prisma_migrations' table is used to track changes to the database structure itself, including the name of the migration, when it started, finished, or was rolled back, and any associated logs.",
+      "timestamp": "2025-01-25T04:00:04.401Z"
+    },
+    {
+      "id": 1737777832143,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T04:03:52.143Z"
+    },
+    {
+      "id": 1737777833509,
+      "role": "assistant",
+      "content": "You can manage user data, including their unique email addresses, names, and timestamps for when they were created and last updated.",
+      "timestamp": "2025-01-25T04:03:53.508Z"
+    },
+    {
+      "id": 1737777838110,
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T04:03:58.110Z"
+    },
+    {
+      "id": 1737777840847,
+      "role": "assistant",
+      "content": "This query will count the total number of users in the User table.\n\nResult: The SQL query indicates that there are currently no users in the database, as the count returned is zero. This suggests that the user registration process may not have been initiated, or there could be an issue preventing users from being added. It may be important to investigate further to understand the cause and take appropriate action to attract users.",
+      "timestamp": "2025-01-25T04:04:00.846Z"
+    },
+    {
+      "id": 1737777851343,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T04:04:11.343Z"
+    },
+    {
+      "id": 1737777853182,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: Sorry, I couldn't process that database operation. Please check your input and try again.",
+      "timestamp": "2025-01-25T04:04:13.181Z"
+    },
+    {
+      "id": 1737778088743,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T04:08:08.743Z"
+    },
+    {
+      "id": 1737778091338,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T04:08:11.337Z"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": 1737778145062,
+      "timestamp": "2025-01-25T04:09:05.062Z"
+    }
+  ]
+}
+[2025-01-25T04:09:05.063Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4o-mini",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that converts natural language requests into SQLite operations.\n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation of the schema or capability\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using ? for parameters\",\n    \"values\": [\"value1\", \"value2\"],\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Always use ? for parameter placeholders\n3. Provide values array in the exact order of the parameters\n4. Handle NULL values appropriately\n5. Format dates as ISO strings\n6. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n7. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T04:09:06.339Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 364,
+    "completion_tokens": 53,
+    "total_tokens": 417,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "schema",
+    "response": {
+      "summary": "The schema consists of a single table named 'User' which stores user information including a unique ID, email, name, and timestamps for creation and updates."
+    }
+  }
+}
+[2025-01-25T04:09:06.340Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "summary": "The schema consists of a single table named 'User' which stores user information including a unique ID, email, name, and timestamps for creation and updates."
+    }
+  }
+}
+[2025-01-25T04:09:08.404Z] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": 1737777833509,
+      "role": "assistant",
+      "content": "You can manage user data, including their unique email addresses, names, and timestamps for when they were created and last updated.",
+      "timestamp": "2025-01-25T04:03:53.508Z"
+    },
+    {
+      "id": 1737777838110,
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T04:03:58.110Z"
+    },
+    {
+      "id": 1737777840847,
+      "role": "assistant",
+      "content": "This query will count the total number of users in the User table.\n\nResult: The SQL query indicates that there are currently no users in the database, as the count returned is zero. This suggests that the user registration process may not have been initiated, or there could be an issue preventing users from being added. It may be important to investigate further to understand the cause and take appropriate action to attract users.",
+      "timestamp": "2025-01-25T04:04:00.846Z"
+    },
+    {
+      "id": 1737777851343,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T04:04:11.343Z"
+    },
+    {
+      "id": 1737777853182,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: Sorry, I couldn't process that database operation. Please check your input and try again.",
+      "timestamp": "2025-01-25T04:04:13.181Z"
+    },
+    {
+      "id": 1737778088743,
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T04:08:08.743Z"
+    },
+    {
+      "id": 1737778091338,
+      "role": "assistant",
+      "content": "I understand what you want to do, but I encountered an error: An error occurred while processing your request. Please try again.",
+      "timestamp": "2025-01-25T04:08:11.337Z"
+    },
+    {
+      "id": 1737778145035,
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T04:09:05.035Z"
+    },
+    {
+      "id": 1737778146344,
+      "role": "assistant",
+      "content": "The schema consists of a single table named 'User' which stores user information including a unique ID, email, name, and timestamps for creation and updates.",
+      "timestamp": "2025-01-25T04:09:06.343Z"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?",
+      "id": 1737778148404,
+      "timestamp": "2025-01-25T04:09:08.404Z"
+    }
+  ]
+}
+[2025-01-25T04:09:08.404Z] INFO: Sending prompt to OpenAI
+Data: {
+  "model": "gpt-4o-mini",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that converts natural language requests into SQLite operations.\n\nFor schema questions, return a JSON response in this format:\n{\n  \"type\": \"schema\",\n  \"response\": {\n    \"summary\": \"A clear explanation of the schema or capability\"\n  }\n}\n\nFor data operations, return a JSON response in this format:\n{\n  \"type\": \"operation\",\n  \"response\": {\n    \"sql\": \"The full SQL query using ? for parameters\",\n    \"values\": [\"value1\", \"value2\"],\n    \"primaryTable\": \"The main table being queried\",\n    \"secondaryTable\": \"The secondary table being queried\",\n    \"operation\": \"The type of operation being performed\",\n    \"status\": \"The status of the operation\",\n    \"summary\": \"A detailed explanation of what this query will do\"\n  }\n}\n\nThe database schema is:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE User (\n  id TEXT PRIMARY KEY DEFAULT (uuid()),\n  email TEXT UNIQUE,\n  name TEXT,\n  createdAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now')),\n  updatedAt TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%f', 'now'))\n)\"\n  }\n]\n\nImportant rules:\n1. Use proper SQLite syntax\n2. Always use ? for parameter placeholders\n3. Provide values array in the exact order of the parameters\n4. Handle NULL values appropriately\n5. Format dates as ISO strings\n6. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n7. Return ONLY the JSON response with no additional text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T04:09:09.899Z] INFO: Received response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 366,
+    "completion_tokens": 81,
+    "total_tokens": 447,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": {
+    "type": "operation",
+    "response": {
+      "sql": "SELECT COUNT(*) FROM User",
+      "values": [],
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "count",
+      "status": "success",
+      "summary": "This query will count the total number of users in the User table."
+    }
+  }
+}
+[2025-01-25T04:09:09.900Z] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "sql": "SELECT COUNT(*) FROM User",
+      "values": [],
+      "primaryTable": "User",
+      "secondaryTable": null,
+      "operation": "count",
+      "status": "success",
+      "summary": "This query will count the total number of users in the User table."
+    }
+  }
+}
+[2025-01-25T04:09:09.900Z] DEBUG: Executing SQL
+Data: {
+  "sql": "SELECT COUNT(*) FROM User",
+  "params": []
+}
+[2025-01-25T04:09:09.902Z] INFO: Sending summary prompt to OpenAI
+Data: {
+  "model": "gpt-4o-mini",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a database expert. Explain query results in clear, natural language."
+    },
+    {
+      "role": "user",
+      "content": "Summarize the results of this SQL query in a clear, business-focused way:\n\nSQL: SELECT COUNT(*) FROM User\nResult: [\n  {\n    \"COUNT(*)\": \"0\"\n  }\n]"
+    }
+  ],
+  "temperature": 0
+}
+[2025-01-25T04:09:11.218Z] INFO: Received summary response from OpenAI
+Data: {
+  "usage": {
+    "prompt_tokens": 67,
+    "completion_tokens": 63,
+    "total_tokens": 130,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "content": "The SQL query indicates that there are currently no users in the database, as the count returned is zero. This suggests that the user registration process may not have been initiated, or there could be an issue preventing users from being added. It may be important to investigate further to understand the cause and take appropriate action."
+}
