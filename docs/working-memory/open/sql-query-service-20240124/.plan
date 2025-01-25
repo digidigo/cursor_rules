@@ -1,0 +1,86 @@
+# SQL Query Generation Service Implementation
+
+## Problem Analysis
+- Need to generate SQL queries from natural language requests
+- Must let schema drive the LLM responses
+- Must separate query generation from result interpretation
+- Must execute queries safely using Prisma
+- Must provide clear, natural language summaries
+
+## Solution Design
+1. Schema-Driven Queries:
+   - Let LLM work directly with schema
+   - Remove hardcoded schema information
+   - Use actual table structure for schema queries
+   - Two-step process: query then summarize
+
+2. SQL Service:
+   - Create singleton service
+   - Use Prisma for safe execution
+   - Handle parameter replacement
+   - Provide error handling
+
+3. LLM Integration:
+   - Schema-driven query generation
+   - Separate summary generation
+   - Minimal prompting
+   - Clean response format
+
+## Implementation Steps
+- [x] Create prompts directory and file
+- [x] Simplify prompts to be schema-driven
+- [x] Create SQLService for query execution
+- [x] Update ChatService with two-step process
+- [x] Add summary generation
+- [x] Remove hardcoded schema information
+- [ ] Add tests
+- [ ] Update documentation
+
+## Affected Components
+- `app/src/services/chat/chat.service.ts`
+- `app/src/services/chat/prompts/sql-prompts.ts`
+- `app/src/services/sql/sql.service.ts`
+
+## Dependencies
+- Prisma Client
+- OpenAI
+- TypeScript types
+
+## Current Status
+
+### 2025-01-24 18:23
+
+**Status**: In Progress
+
+- What's working: 
+  - Schema-driven query generation
+  - Two-step process
+  - Natural language summaries
+  - Clean response format
+- What's not: Need to add tests and documentation
+- Blocking issues: None
+- Next actions: Add tests and documentation
+- Documentation updates needed:
+  - [ ] Feature documentation changes
+  - [ ] API documentation updates
+  - [ ] Component documentation revisions
+  - [ ] Test documentation updates
+  - [ ] Architecture documentation changes
+
+## Progress History
+
+### 2025-01-24 18:23 - Schema-Driven Responses
+
+- ✓ Completed: Simplified prompts, added two-step process
+- 🤔 Decisions: Let schema drive LLM responses, separate query generation from summarization
+- ❌ Issues: None yet
+- 📚 Documentation: Need to update API documentation
+- ⏭️ Led to: More flexible and maintainable query handling
+
+### 2025-01-24 18:23 - Initial Implementation
+
+- ✓ Completed: Created prompts file, SQL service, and updated chat service
+- 🤔 Decisions: Used singleton pattern for services, separated prompts into external file
+- ❌ Issues: None yet
+- 📚 Documentation: Need to add API documentation
+- ⏭️ Led to: Basic SQL query generation capability
