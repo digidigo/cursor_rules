@@ -10,8 +10,6 @@ interface SchemaTable {
 
 interface SQLExecuteOptions {
   sql: string;
-  values?: Record<string, any>;
-  params?: any[];
 }
 
 export class SQLService {
@@ -35,34 +33,11 @@ export class SQLService {
     ));
   }
 
-  private processSQL(sql: string, values: Record<string, any> = {}): { sql: string; params: any[] } {
-    const params: any[] = [];
-    
-    // Replace named parameters with ? and collect values in order
-    const processedSQL = sql.replace(/\?/g, (match, offset) => {
-      const param = Object.values(values)[params.length];
-      if (param !== undefined) {
-        params.push(param);
-        return '?';
-      }
-      return match;
-    });
-
-    return { sql: processedSQL, params };
-  }
-
   public async execute(options: SQLExecuteOptions): Promise<any> {
     try {
-      // If values are provided, process the SQL to use them
-      const { sql, params } = options.values ? 
-        this.processSQL(options.sql, options.values) : 
-        { sql: options.sql, params: options.params || [] };
+      logger.debug('Executing SQL', { sql: options.sql });
 
-      logger.debug('Executing SQL', { sql, params });
-
-      const result = await this.prisma.$queryRaw(
-        Prisma.sql([sql, ...params])
-      );
+      const result = await this.prisma.$queryRawUnsafe(options.sql);
       return this.serializeResult(result);
     } catch (error) {
       logger.error('SQL execution failed', error);

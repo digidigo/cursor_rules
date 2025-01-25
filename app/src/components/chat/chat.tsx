@@ -34,7 +34,7 @@ export function Chat() {
 
   const handleSubmit = async (content: string) => {
     if (isLoading) return;
-
+      
     setIsLoading(true);
     const newMessage: ChatMessageType = {
       id: Date.now().toString(),
@@ -44,7 +44,7 @@ export function Chat() {
     };
 
     setMessages(prev => [...prev, newMessage]);
-
+      
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
