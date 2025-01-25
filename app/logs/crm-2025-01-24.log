@@ -1,0 +1,1744 @@
+[2025-01-24 18:57:14] INFO: Starting SQL query generation
+Data: {
+  "request": "what can you help me with"
+}
+[2025-01-24 18:57:14] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 18:57:14] DEBUG: Sending prompt to OpenAI
+Data: {
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their projects, invoices, and bills using natural language.\nYour role is to convert natural language requests into SQL operations.\n\nIMPORTANT: You must ONLY return a JSON object without any markdown formatting, code blocks, or additional text.\nReturn EXACTLY this format and nothing else:\n{\n  \"type\": \"schema\" | \"operation\",\n  \"response\": {\n    \"primary_table\": string,\n    \"secondary_table\": string | null,\n    \"operation\": \"select\" | \"insert\" | \"update\" | \"delete\",\n    \"status\": \"success\" | \"error\",\n    \"summary\": string,\n    \"sql\": string\n  }\n}\n\nAvailable Features:\n- Projects: Create and manage projects\n- Invoices: Track income and payments\n- Bills: Track expenses and costs\n- Users: Manage user accounts\n\nRules:\n1. Use parameterized queries with :param syntax\n2. Include proper timestamps for createdAt and updatedAt\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query that shows relevant tables\n5. For operations, generate the appropriate SQL query\n6. ONLY return the JSON response, no other text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "You are helping users manage their CRM data.\n\nDatabase Schema:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nUser Request: what can you help me with\n\nRemember:\n1. For questions about capabilities, show relevant tables and their purpose\n2. For operations, generate appropriate SQL with proper parameters\n3. Provide clear, user-friendly summaries\n4. Consider relationships between tables (e.g., Projects have Invoices and Bills)\n5. Return ONLY the JSON response, no markdown or code blocks\n\nIMPORTANT: Return ONLY the JSON object, no other text or formatting."
+    }
+  ]
+}
+[2025-01-24 18:57:18] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"Available databases include User management with fields for id, email, name, createdAt, and updatedAt. The _prisma_migrations table is for system use.\",\n    \"sql\": \"SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_prisma_migrations';\"\n  }\n}"
+}
+[2025-01-24 18:57:18] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "Available databases include User management with fields for id, email, name, createdAt, and updatedAt. The _prisma_migrations table is for system use.",
+      "sql": "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_prisma_migrations';"
+    }
+  }
+}
+[2025-01-24 18:57:18] INFO: Executing SQL query
+Data: {
+  "sql": "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_prisma_migrations';",
+  "table": "User"
+}
+[2025-01-24 18:57:18] DEBUG: SQL query result
+Data: {
+  "result": [
+    {
+      "name": "User"
+    }
+  ]
+}
+[2025-01-24 18:57:18] DEBUG: Requesting summary from OpenAI
+Data: {
+  "summaryMessages": [
+    {
+      "role": "system",
+      "content": "You are a database expert. Explain query results in clear, natural language."
+    },
+    {
+      "role": "user",
+      "content": "As a CRM assistant, explain these results in user-friendly terms:\n\nSQL Query: SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_prisma_migrations';\nResult: [\n  {\n    \"name\": \"User\"\n  }\n]\n\nFocus on business implications and next steps if relevant.\nReturn ONLY the text summary, no JSON or formatting."
+    }
+  ]
+}
+[2025-01-24 18:57:21] INFO: Completed query and summary
+Data: {
+  "summary": "This result indicates that in your database, there is currently one primary table named \"User\" that stores information relevant to your operations. This suggests that the database is structured to hold data specifically about users—potentially including details like contact information, preferences, or interaction history. It's essential to ensure this table is well-maintained, with up-to-date and accurate user information, as it likely serves as the foundation for personalized communication, user management, and service optimization. Moving forward, you may want to consider assessing the current fields in the \"User\" table to determine if additional information could enhance your CRM efforts, such as incorporating user feedback, purchase history, or engagement metrics. This strategic approach can help in tailoring services, improving user experiences, and driving business growth.",
+  "usage": {
+    "prompt_tokens": 559,
+    "completion_tokens": 116,
+    "total_tokens": 675,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}
+[2025-01-24 18:59:01] INFO: Starting SQL query generation
+Data: {
+  "request": "create a user name dave clements"
+}
+[2025-01-24 18:59:01] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 18:59:01] DEBUG: Sending prompt to OpenAI
+Data: {
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their projects, invoices, and bills using natural language.\nYour role is to convert natural language requests into SQL operations.\n\nIMPORTANT: You must ONLY return a JSON object without any markdown formatting, code blocks, or additional text.\nReturn EXACTLY this format and nothing else:\n{\n  \"type\": \"schema\" | \"operation\",\n  \"response\": {\n    \"primary_table\": string,\n    \"secondary_table\": string | null,\n    \"operation\": \"select\" | \"insert\" | \"update\" | \"delete\",\n    \"status\": \"success\" | \"error\",\n    \"summary\": string,\n    \"sql\": string\n  }\n}\n\nAvailable Features:\n- Projects: Create and manage projects\n- Invoices: Track income and payments\n- Bills: Track expenses and costs\n- Users: Manage user accounts\n\nRules:\n1. Use parameterized queries with :param syntax\n2. Include proper timestamps for createdAt and updatedAt\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query that shows relevant tables\n5. For operations, generate the appropriate SQL query\n6. ONLY return the JSON response, no other text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "You are helping users manage their CRM data.\n\nDatabase Schema:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nUser Request: create a user name dave clements\n\nRemember:\n1. For questions about capabilities, show relevant tables and their purpose\n2. For operations, generate appropriate SQL with proper parameters\n3. Provide clear, user-friendly summaries\n4. Consider relationships between tables (e.g., Projects have Invoices and Bills)\n5. Return ONLY the JSON response, no markdown or code blocks\n\nIMPORTANT: Return ONLY the JSON object, no other text or formatting."
+    }
+  ]
+}
+[2025-01-24 18:59:04] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"operation\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": null,\n    \"operation\": \"insert\",\n    \"status\": \"success\",\n    \"summary\": \"Inserting a new user named Dave Clements.\",\n    \"sql\": \"INSERT INTO \\\"User\\\" (id, email, name, createdAt, updatedAt) VALUES (:id, :email, :name, :createdAt, :updatedAt)\"\n  }\n}"
+}
+[2025-01-24 18:59:04] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "insert",
+      "status": "success",
+      "summary": "Inserting a new user named Dave Clements.",
+      "sql": "INSERT INTO \"User\" (id, email, name, createdAt, updatedAt) VALUES (:id, :email, :name, :createdAt, :updatedAt)"
+    }
+  }
+}
+[2025-01-24 18:59:04] INFO: Executing SQL query
+Data: {
+  "sql": "INSERT INTO \"User\" (id, email, name, createdAt, updatedAt) VALUES (:id, :email, :name, :createdAt, :updatedAt)",
+  "table": "User"
+}
+[2025-01-24 18:59:04] ERROR: Failed to process SQL response
+Data: {
+  "message": "\nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `N/A`. Message: `N/A`",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `N/A`. Message: `N/A`\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:7339)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async ChatService.streamSQLResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__b3ef18._.js:522:36)\n    at async ChatService.streamResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__b3ef18._.js:442:13)"
+}
+[2025-01-24 18:59:04] ERROR: SQL query generation failed
+Data: {
+  "message": "The \"payload\" argument must be of type object. Received null",
+  "stack": "TypeError: The \"payload\" argument must be of type object. Received null\n    at cloneSourceMapV3 (node:internal/source_map/source_map:358:3)\n    at new SourceMap (node:internal/source_map/source_map:142:21)\n    at findSourceMap (node:internal/source_map/source_map_cache:339:17)\n    at getSourcemappedFrameIfPossible (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/patch-error-inspect.js:163:90)\n    at parseAndSourceMap (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/patch-error-inspect.js:265:39)\n    at sourceMapError (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/patch-error-inspect.js:288:22)\n    at /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/patch-error-inspect.js:306:30\n    at AsyncLocalStorage.exit (node:async_hooks:358:14)\n    at errorConstructor.<computed> (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/patch-error-inspect.js:305:67)\n    at formatValue (node:internal/util/inspect:805:19)\n    at inspect (node:internal/util/inspect:364:10)\n    at formatWithOptionsInternal (node:internal/util/inspect:2298:40)\n    at formatWithOptions (node:internal/util/inspect:2160:10)\n    at console.value (node:internal/console/constructor:351:14)\n    at console.warn (node:internal/console/constructor:384:61)\n    at console.error (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:98:12057)\n    at console.error (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:106:12719)\n    at Object.onError (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__b3ef18._.js:742:25)\n    at Object.onError (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__b3ef18._.js:461:37)\n    at async ChatService.streamSQLResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__b3ef18._.js:579:17)\n    at async ChatService.streamResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__b3ef18._.js:442:13)"
+}
+[2025-01-24 19:28:44] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "role": "user",
+      "content": "what can you do",
+      "id": "1737772124135",
+      "timestamp": "2025-01-25T02:28:44.135Z"
+    }
+  ]
+}
+[2025-01-24 19:28:44] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 19:28:44] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their projects, invoices, and bills using natural language.\nYour role is to convert natural language requests into SQL operations.\n\nIMPORTANT: You must ONLY return a JSON object without any markdown formatting, code blocks, or additional text.\nReturn EXACTLY this format and nothing else:\n{\n  \"type\": \"schema\" | \"operation\",\n  \"response\": {\n    \"primary_table\": string,\n    \"secondary_table\": string | null,\n    \"operation\": \"select\" | \"insert\" | \"update\" | \"delete\",\n    \"status\": \"success\" | \"error\",\n    \"summary\": string,\n    \"sql\": string\n  }\n}\n\nAvailable Features:\n- Projects: Create and manage projects\n- Invoices: Track income and payments\n- Bills: Track expenses and costs\n- Users: Manage user accounts\n\nRules:\n1. Use parameterized queries with :param syntax\n2. Include proper timestamps for createdAt and updatedAt\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query that shows relevant tables\n5. For operations, generate the appropriate SQL query\n6. ONLY return the JSON response, no other text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "You are helping users manage their CRM data.\n\nDatabase Schema:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nUser Request: what can you do\n\nRemember:\n1. For questions about capabilities, show relevant tables and their purpose\n2. For operations, generate appropriate SQL with proper parameters\n3. Provide clear, user-friendly summaries\n4. Consider relationships between tables (e.g., Projects have Invoices and Bills)\n5. Return ONLY the JSON response, no markdown or code blocks\n\nIMPORTANT: Return ONLY the JSON object, no other text or formatting."
+    }
+  ]
+}
+[2025-01-24 19:28:48] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"The database currently supports user management, including creating and updating user information. The User table stores user IDs, emails, names, and timestamps for creation and updates.\",\n    \"sql\": \"SELECT 'User' AS table_name, 'id, email, name, createdAt, updatedAt' AS columns UNION ALL SELECT '_prisma_migrations', 'id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count'\"\n  }\n}"
+}
+[2025-01-24 19:28:48] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "The database currently supports user management, including creating and updating user information. The User table stores user IDs, emails, names, and timestamps for creation and updates.",
+      "sql": "SELECT 'User' AS table_name, 'id, email, name, createdAt, updatedAt' AS columns UNION ALL SELECT '_prisma_migrations', 'id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count'"
+    }
+  }
+}
+[2025-01-24 19:28:48] INFO: Executing SQL query
+Data: {
+  "sql": "SELECT 'User' AS table_name, 'id, email, name, createdAt, updatedAt' AS columns UNION ALL SELECT '_prisma_migrations', 'id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count'",
+  "table": "User"
+}
+[2025-01-24 19:28:48] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "SELECT 'User' AS table_name, 'id, email, name, createdAt, updatedAt' AS columns UNION ALL SELECT '_prisma_migrations', 'id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count'"
+}
+[2025-01-24 19:28:48] DEBUG: SQL query result
+Data: {
+  "result": [
+    {
+      "table_name": "User",
+      "columns": "id, email, name, createdAt, updatedAt"
+    },
+    {
+      "table_name": "_prisma_migrations",
+      "columns": "id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count"
+    }
+  ]
+}
+[2025-01-24 19:28:56] INFO: Generated summary
+Data: {
+  "summary": "The results of your query provide a summary of two significant tables within the Customer Relationship Management (CRM) system. The first table, named \"User,\" contains key information about users, including their identification number (id), email, name, and the timestamps for when their record was created (createdAt) and last updated (updatedAt). This table is crucial for managing user data, ensuring that we have essential information to communicate with and understand our users over time.\n\nThe second table listed is \"_prisma_migrations.\" This table holds technical details regarding the database migrations, which are changes or updates made to the database structure. It tracks various aspects of each migration, such as its identification number (id), a checksum (which helps verify the consistency of the data), when the migration was completed (finished_at), the name of the migration (migration_name), logs of the process, whether the migration was rolled back (rolled_back_at), when it started (started_at), and the count of steps applied (applied_steps_count).\n\nFrom a business perspective, the \"User\" table is directly related to customer relations and operational effectiveness, ensuring we can maintain up-to-date and comprehensive records on our users. It supports targeted marketing efforts, customer service improvements, and enhanced personalization strategies.\n\nThe \"_prisma_migrations\" table, while more technical, plays a crucial role in ensuring the database remains efficient, secure, and reflective of current business requirements. It aids in identifying potential issues from past migrations, making future database modifications smoother and helping prevent disruptions to both the CRM system and the business operations it supports.\n\nNext steps involve continuing to monitor and maintain these tables for accuracy and integrity. For the \"User\" table, periodic reviews might be necessary to ensure personal information is up-to-date and complies with data protection regulations. For the \"_prisma_migrations\" table, upcoming migrations should be planned with attention to the table's insights to minimize potential issues, ensuring system stability and performance."
+}
+[2025-01-24 19:28:56] ERROR: Failed to process SQL response
+Data: {
+  "message": "Unexpected token 'T', \"The result\"... is not valid JSON",
+  "stack": "SyntaxError: Unexpected token 'T', \"The result\"... is not valid JSON\n    at JSON.parse (<anonymous>)\n    at Object.onContent (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:454:43)\n    at ChatService.streamSQLResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:536:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ChatService.streamResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:452:13)"
+}
+[2025-01-24 19:38:02] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737772682824",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:38:02.824Z"
+    }
+  ]
+}
+[2025-01-24 19:38:02] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 19:38:02] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their projects, invoices, and bills using natural language.\nYour role is to convert natural language requests into SQL operations.\n\nIMPORTANT: You must ONLY return a JSON object without any markdown formatting, code blocks, or additional text.\nReturn EXACTLY this format and nothing else:\n{\n  \"type\": \"schema\" | \"operation\",\n  \"response\": {\n    \"primary_table\": string,\n    \"secondary_table\": string | null,\n    \"operation\": \"select\" | \"insert\" | \"update\" | \"delete\",\n    \"status\": \"success\" | \"error\",\n    \"summary\": string,\n    \"sql\": string\n  }\n}\n\nAvailable Features:\n- Projects: Create and manage projects\n- Invoices: Track income and payments\n- Bills: Track expenses and costs\n- Users: Manage user accounts\n\nRules:\n1. Use parameterized queries with :param syntax\n2. Include proper timestamps for createdAt and updatedAt\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query that shows relevant tables\n5. For operations, generate the appropriate SQL query\n6. ONLY return the JSON response, no other text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "You are helping users manage their CRM data.\n\nDatabase Schema:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nUser Request: What can you do?\n\nRemember:\n1. For questions about capabilities, show relevant tables and their purpose\n2. For operations, generate appropriate SQL with proper parameters\n3. Provide clear, user-friendly summaries\n4. Consider relationships between tables (e.g., Projects have Invoices and Bills)\n5. Return ONLY the JSON response, no markdown or code blocks\n\nIMPORTANT: Return ONLY the JSON object, no other text or formatting."
+    }
+  ]
+}
+[2025-01-24 19:38:07] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"The database currently supports user management. The User table is used to store information about users, including their ID, email, name, and timestamps for creation and updates.\",\n    \"sql\": \"SELECT 'User' AS table_name, 'Stores user information including ID, email, name, creation and update timestamps' AS description UNION ALL SELECT '_prisma_migrations', 'Used for tracking database migration history'\"\n  }\n}"
+}
+[2025-01-24 19:38:07] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "The database currently supports user management. The User table is used to store information about users, including their ID, email, name, and timestamps for creation and updates.",
+      "sql": "SELECT 'User' AS table_name, 'Stores user information including ID, email, name, creation and update timestamps' AS description UNION ALL SELECT '_prisma_migrations', 'Used for tracking database migration history'"
+    }
+  }
+}
+[2025-01-24 19:38:07] INFO: Executing SQL query
+Data: {
+  "sql": "SELECT 'User' AS table_name, 'Stores user information including ID, email, name, creation and update timestamps' AS description UNION ALL SELECT '_prisma_migrations', 'Used for tracking database migration history'",
+  "table": "User"
+}
+[2025-01-24 19:38:07] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "SELECT 'User' AS table_name, 'Stores user information including ID, email, name, creation and update timestamps' AS description UNION ALL SELECT '_prisma_migrations', 'Used for tracking database migration history'"
+}
+[2025-01-24 19:38:07] DEBUG: SQL query result
+Data: {
+  "result": [
+    {
+      "table_name": "User",
+      "description": "Stores user information including ID, email, name, creation and update timestamps"
+    },
+    {
+      "table_name": "_prisma_migrations",
+      "description": "Used for tracking database migration history"
+    }
+  ]
+}
+[2025-01-24 19:38:08] INFO: Generated summary
+Data: {
+  "summary": "The SQL query successfully listed two essential tables in the database: one that stores critical user information such as ID and email, and another that tracks the history of database migrations. This information is vital for understanding the structure of the database and ensuring efficient data management and application updates."
+}
+[2025-01-24 19:38:18] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737772682824",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:38:02.824Z"
+    },
+    {
+      "id": "1737772688778",
+      "role": "assistant",
+      "content": "The SQL query successfully listed two essential tables in the database: one that stores critical user information such as ID and email, and another that tracks the history of database migrations. This information is vital for understanding the structure of the database and ensuring efficient data management and application updates.",
+      "timestamp": "2025-01-25T02:38:08.777Z"
+    },
+    {
+      "id": "1737772698370",
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "timestamp": "2025-01-25T02:38:18.370Z"
+    }
+  ]
+}
+[2025-01-24 19:38:18] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 19:38:18] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their projects, invoices, and bills using natural language.\nYour role is to convert natural language requests into SQL operations.\n\nIMPORTANT: You must ONLY return a JSON object without any markdown formatting, code blocks, or additional text.\nReturn EXACTLY this format and nothing else:\n{\n  \"type\": \"schema\" | \"operation\",\n  \"response\": {\n    \"primary_table\": string,\n    \"secondary_table\": string | null,\n    \"operation\": \"select\" | \"insert\" | \"update\" | \"delete\",\n    \"status\": \"success\" | \"error\",\n    \"summary\": string,\n    \"sql\": string\n  }\n}\n\nAvailable Features:\n- Projects: Create and manage projects\n- Invoices: Track income and payments\n- Bills: Track expenses and costs\n- Users: Manage user accounts\n\nRules:\n1. Use parameterized queries with :param syntax\n2. Include proper timestamps for createdAt and updatedAt\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query that shows relevant tables\n5. For operations, generate the appropriate SQL query\n6. ONLY return the JSON response, no other text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "You are helping users manage their CRM data.\n\nDatabase Schema:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nUser Request: Add a user for John Smith\n\nRemember:\n1. For questions about capabilities, show relevant tables and their purpose\n2. For operations, generate appropriate SQL with proper parameters\n3. Provide clear, user-friendly summaries\n4. Consider relationships between tables (e.g., Projects have Invoices and Bills)\n5. Return ONLY the JSON response, no markdown or code blocks\n\nIMPORTANT: Return ONLY the JSON object, no other text or formatting."
+    }
+  ]
+}
+[2025-01-24 19:38:21] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"operation\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": null,\n    \"operation\": \"insert\",\n    \"status\": \"success\",\n    \"summary\": \"Added a new user named John Smith.\",\n    \"sql\": \"INSERT INTO \\\"User\\\" (\\\"id\\\", \\\"email\\\", \\\"name\\\", \\\"createdAt\\\", \\\"updatedAt\\\") VALUES (:id, :email, :name, :createdAt, :updatedAt)\"\n  }\n}"
+}
+[2025-01-24 19:38:21] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "insert",
+      "status": "success",
+      "summary": "Added a new user named John Smith.",
+      "sql": "INSERT INTO \"User\" (\"id\", \"email\", \"name\", \"createdAt\", \"updatedAt\") VALUES (:id, :email, :name, :createdAt, :updatedAt)"
+    }
+  }
+}
+[2025-01-24 19:38:21] INFO: Executing SQL query
+Data: {
+  "sql": "INSERT INTO \"User\" (\"id\", \"email\", \"name\", \"createdAt\", \"updatedAt\") VALUES (:id, :email, :name, :createdAt, :updatedAt)",
+  "table": "User"
+}
+[2025-01-24 19:38:21] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "INSERT INTO \"User\" (\"id\", \"email\", \"name\", \"createdAt\", \"updatedAt\") VALUES (''ba219fc4-22a0-4df9-9af9-607c1cee0307'', :email, 'John Smith', 'CURRENT_TIMESTAMP', 'CURRENT_TIMESTAMP')"
+}
+[2025-01-24 19:38:21] ERROR: Failed to process SQL response
+Data: {
+  "message": "\nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `1`. Message: `near \"ba219fc4\": syntax error`",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `1`. Message: `near \"ba219fc4\": syntax error`\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:7339)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async ChatService.streamSQLResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:527:28)\n    at async ChatService.streamResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:450:13)"
+}
+[2025-01-24 19:47:29] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737773249610",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:47:29.610Z"
+    }
+  ]
+}
+[2025-01-24 19:47:29] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 19:47:29] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\nYour role is to convert natural language requests into SQLite operations.\n\nIMPORTANT: You must ONLY return a JSON object without any markdown formatting, code blocks, or additional text.\nReturn EXACTLY this format and nothing else:\n{\n  \"type\": \"schema\" | \"operation\",\n  \"response\": {\n    \"primary_table\": string,\n    \"secondary_table\": string | null,\n    \"operation\": \"select\" | \"insert\" | \"update\" | \"delete\",\n    \"status\": \"success\" | \"error\",\n    \"summary\": string,\n    \"sql\": string\n  }\n}\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. ONLY return the JSON response, no other text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "Database Schema:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nUser Request: What can you do?\n\nRemember to use SQLite syntax and return ONLY the JSON response."
+    }
+  ]
+}
+[2025-01-24 19:47:33] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"Available operations for the User table include SELECT, INSERT, UPDATE, and DELETE. The table schema includes fields for id, email, name, createdAt, and updatedAt.\",\n    \"sql\": \"SELECT 'id', 'email', 'name', 'createdAt', 'updatedAt' FROM 'User'\"\n  }\n}"
+}
+[2025-01-24 19:47:33] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "Available operations for the User table include SELECT, INSERT, UPDATE, and DELETE. The table schema includes fields for id, email, name, createdAt, and updatedAt.",
+      "sql": "SELECT 'id', 'email', 'name', 'createdAt', 'updatedAt' FROM 'User'"
+    }
+  }
+}
+[2025-01-24 19:47:33] INFO: Executing SQL query
+Data: {
+  "sql": "SELECT 'id', 'email', 'name', 'createdAt', 'updatedAt' FROM 'User'",
+  "table": "User"
+}
+[2025-01-24 19:47:33] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "SELECT 'id', 'email', 'name', 'createdAt', 'updatedAt' FROM 'User'",
+  "params": []
+}
+[2025-01-24 19:47:33] DEBUG: SQL query result
+Data: {
+  "result": []
+}
+[2025-01-24 19:47:34] INFO: Generated summary
+Data: {
+  "summary": "The SQL query attempted to retrieve a list of user details including id, email, name, creation date, and update date from the User database, but it resulted in no records being found. This indicates that either the database has no user data stored at the moment, or the query did not correctly target the intended records."
+}
+[2025-01-24 19:51:11] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737773471131",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:51:11.131Z"
+    }
+  ]
+}
+[2025-01-24 19:51:11] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 19:51:11] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\nYour role is to convert natural language requests into SQLite operations.\n\nIMPORTANT: You must ONLY return a JSON object without any markdown formatting, code blocks, or additional text.\nReturn EXACTLY this format and nothing else:\n{\n  \"type\": \"schema\" | \"operation\",\n  \"response\": {\n    \"primary_table\": string,\n    \"secondary_table\": string | null,\n    \"operation\": \"select\" | \"insert\" | \"update\" | \"delete\",\n    \"status\": \"success\" | \"error\",\n    \"summary\": string,\n    \"sql\": string\n  }\n}\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. ONLY return the JSON response, no other text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "Database Schema:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nUser Request: What can you do?\n\nRemember to use SQLite syntax and return ONLY the JSON response."
+    }
+  ]
+}
+[2025-01-24 19:51:16] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"Available operations for the User table include SELECT, INSERT, UPDATE, and DELETE. The table schema includes fields for id, email, name, createdAt, and updatedAt.\",\n    \"sql\": \"SELECT 'id', 'email', 'name', 'createdAt', 'updatedAt' FROM 'User'\"\n  }\n}"
+}
+[2025-01-24 19:51:16] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "Available operations for the User table include SELECT, INSERT, UPDATE, and DELETE. The table schema includes fields for id, email, name, createdAt, and updatedAt.",
+      "sql": "SELECT 'id', 'email', 'name', 'createdAt', 'updatedAt' FROM 'User'"
+    }
+  }
+}
+[2025-01-24 19:51:16] INFO: Executing SQL query
+Data: {
+  "sql": "SELECT 'id', 'email', 'name', 'createdAt', 'updatedAt' FROM 'User'",
+  "table": "User"
+}
+[2025-01-24 19:51:16] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "SELECT 'id', 'email', 'name', 'createdAt', 'updatedAt' FROM 'User'",
+  "params": []
+}
+[2025-01-24 19:51:16] DEBUG: SQL query result
+Data: {
+  "result": []
+}
+[2025-01-24 19:51:18] INFO: Generated summary
+Data: {
+  "summary": "The query attempted to retrieve the ID, email, name, created at, and updated at information for users, but it returned no results, indicating there are no user records currently available in the database. This could mean there are no users currently registered or there's an error in how the query was formulated."
+}
+[2025-01-24 19:52:23] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737773543553",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:52:23.553Z"
+    }
+  ]
+}
+[2025-01-24 19:52:23] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 19:52:23] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\nYour role is to convert natural language requests into SQLite operations.\n\nIMPORTANT: You must ONLY return a JSON object without any markdown formatting, code blocks, or additional text.\nReturn EXACTLY this format and nothing else:\n{\n  \"type\": \"schema\" | \"operation\",\n  \"response\": {\n    \"primary_table\": string,\n    \"secondary_table\": string | null,\n    \"operation\": \"select\" | \"insert\" | \"update\" | \"delete\",\n    \"status\": \"success\" | \"error\",\n    \"summary\": string,\n    \"sql\": string\n  }\n}\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. ONLY return the JSON response, no other text or formatting"
+    },
+    {
+      "role": "user",
+      "content": "Database Schema:\n[\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nUser Request: What can you do?\n\nRemember to use SQLite syntax and return ONLY the JSON response."
+    }
+  ]
+}
+[2025-01-24 19:52:26] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"Available operations for the User table include SELECT, INSERT, UPDATE, and DELETE. For the _prisma_migrations table, similar operations are available.\",\n    \"sql\": \"SELECT 'SELECT, INSERT, UPDATE, DELETE' AS operations_available FROM User LIMIT 1\"\n  }\n}"
+}
+[2025-01-24 19:52:26] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "Available operations for the User table include SELECT, INSERT, UPDATE, and DELETE. For the _prisma_migrations table, similar operations are available.",
+      "sql": "SELECT 'SELECT, INSERT, UPDATE, DELETE' AS operations_available FROM User LIMIT 1"
+    }
+  }
+}
+[2025-01-24 19:52:26] INFO: Executing SQL query
+Data: {
+  "sql": "SELECT 'SELECT, INSERT, UPDATE, DELETE' AS operations_available FROM User LIMIT 1",
+  "table": "User"
+}
+[2025-01-24 19:52:26] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "SELECT 'SELECT, INSERT, UPDATE, DELETE' AS operations_available FROM User LIMIT 1",
+  "params": []
+}
+[2025-01-24 19:52:26] DEBUG: SQL query result
+Data: {
+  "result": []
+}
+[2025-01-24 19:52:28] INFO: Generated summary
+Data: {
+  "summary": "The query attempted to retrieve a list of operations such as SELECT, INSERT, UPDATE, DELETE available for a User, but no results were found. This indicates that there might be no users present in the database, or there could be a restriction in accessing the data, potentially impacting user management or data modification processes."
+}
+[2025-01-24 19:55:01] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737773701812",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:55:01.812Z"
+    }
+  ]
+}
+[2025-01-24 19:55:01] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 19:55:01] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\nYour role is to convert natural language requests into SQLite operations.\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. Use single quotes for string values\n7. Don't quote table/column names unless needed\n8. Consider relationships between tables\n9. Return ONLY a JSON response with no formatting\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "Schema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\nRequest: What can you do?"
+    }
+  ]
+}
+[2025-01-24 19:55:05] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": \"_prisma_migrations\",\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"Available tables and columns\",\n    \"sql\": \"SELECT 'User' AS table_name, 'id, email, name, createdAt, updatedAt' AS columns UNION ALL SELECT '_prisma_migrations', 'id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count'\"\n  }\n}"
+}
+[2025-01-24 19:55:05] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": "_prisma_migrations",
+      "operation": "select",
+      "status": "success",
+      "summary": "Available tables and columns",
+      "sql": "SELECT 'User' AS table_name, 'id, email, name, createdAt, updatedAt' AS columns UNION ALL SELECT '_prisma_migrations', 'id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count'"
+    }
+  }
+}
+[2025-01-24 19:55:05] INFO: Executing SQL query
+Data: {
+  "sql": "SELECT 'User' AS table_name, 'id, email, name, createdAt, updatedAt' AS columns UNION ALL SELECT '_prisma_migrations', 'id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count'",
+  "table": "User"
+}
+[2025-01-24 19:55:05] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "SELECT 'User' AS table_name, 'id, email, name, createdAt, updatedAt' AS columns UNION ALL SELECT '_prisma_migrations', 'id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count'",
+  "params": []
+}
+[2025-01-24 19:55:05] DEBUG: SQL query result
+Data: {
+  "result": [
+    {
+      "table_name": "User",
+      "columns": "id, email, name, createdAt, updatedAt"
+    },
+    {
+      "table_name": "_prisma_migrations",
+      "columns": "id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count"
+    }
+  ]
+}
+[2025-01-24 19:55:08] INFO: Generated summary
+Data: {
+  "summary": "The query result provides a concise overview of the structure of two critical tables within the database: the 'User' table, which stores essential user information including identification, contact details, and timestamps of creation and updates; and the '_prisma_migrations' table, which tracks the details of database schema changes, including migration status and logs. This information is crucial for maintaining data integrity and ensuring smooth operations and updates in the system, directly impacting the efficiency and reliability of the database management processes."
+}
+[2025-01-24 19:55:17] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737773701812",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:55:01.812Z"
+    },
+    {
+      "id": "1737773708068",
+      "role": "assistant",
+      "content": "",
+      "timestamp": "2025-01-25T02:55:08.067Z"
+    },
+    {
+      "id": "1737773717028",
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T02:55:17.028Z"
+    }
+  ]
+}
+[2025-01-24 19:55:17] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 19:55:17] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\nYour role is to convert natural language requests into SQLite operations.\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. Use single quotes for string values\n7. Don't quote table/column names unless needed\n8. Consider relationships between tables\n9. Return ONLY a JSON response with no formatting\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "Schema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\nRequest: How many users do we have?"
+    }
+  ]
+}
+[2025-01-24 19:55:19] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"operation\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"Counting the number of users\",\n    \"sql\": \"SELECT COUNT(*) FROM User\"\n  }\n}"
+}
+[2025-01-24 19:55:19] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "Counting the number of users",
+      "sql": "SELECT COUNT(*) FROM User"
+    }
+  }
+}
+[2025-01-24 19:55:19] INFO: Executing SQL query
+Data: {
+  "sql": "SELECT COUNT(*) FROM User",
+  "table": "User"
+}
+[2025-01-24 19:55:19] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "SELECT COUNT(*) FROM User",
+  "params": []
+}
+[2025-01-24 19:55:19] ERROR: Failed to process SQL response
+Data: {
+  "message": "Do not know how to serialize a BigInt",
+  "stack": "TypeError: Do not know how to serialize a BigInt\n    at JSON.stringify (<anonymous>)\n    at Logger.formatMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:164:48)\n    at Logger.debug (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:180:39)\n    at ChatService.streamSQLResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:521:142)\n    at async ChatService.streamResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:432:13)"
+}
+[2025-01-24 19:55:22] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737773701812",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:55:01.812Z"
+    },
+    {
+      "id": "1737773708068",
+      "role": "assistant",
+      "content": "",
+      "timestamp": "2025-01-25T02:55:08.067Z"
+    },
+    {
+      "id": "1737773717028",
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T02:55:17.028Z"
+    },
+    {
+      "id": "1737773719191",
+      "role": "assistant",
+      "content": "",
+      "timestamp": "2025-01-25T02:55:19.190Z"
+    },
+    {
+      "id": "1737773719208",
+      "role": "assistant",
+      "content": "Sorry, I encountered an error. Please try again.",
+      "timestamp": "2025-01-25T02:55:19.207Z"
+    },
+    {
+      "id": "1737773722238",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:55:22.238Z"
+    }
+  ]
+}
+[2025-01-24 19:55:22] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 19:55:22] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\nYour role is to convert natural language requests into SQLite operations.\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. Use single quotes for string values\n7. Don't quote table/column names unless needed\n8. Consider relationships between tables\n9. Return ONLY a JSON response with no formatting\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "Schema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\nRequest: What can you do?"
+    }
+  ]
+}
+[2025-01-24 19:55:25] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": \"_prisma_migrations\",\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"Available tables and columns\",\n    \"sql\": \"SELECT 'Table: User, Columns: id, email, name, createdAt, updatedAt' UNION SELECT 'Table: _prisma_migrations, Columns: id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count'\"\n  }\n}"
+}
+[2025-01-24 19:55:25] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": "_prisma_migrations",
+      "operation": "select",
+      "status": "success",
+      "summary": "Available tables and columns",
+      "sql": "SELECT 'Table: User, Columns: id, email, name, createdAt, updatedAt' UNION SELECT 'Table: _prisma_migrations, Columns: id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count'"
+    }
+  }
+}
+[2025-01-24 19:55:25] INFO: Executing SQL query
+Data: {
+  "sql": "SELECT 'Table: User, Columns: id, email, name, createdAt, updatedAt' UNION SELECT 'Table: _prisma_migrations, Columns: id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count'",
+  "table": "User"
+}
+[2025-01-24 19:55:25] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "SELECT 'Table: User, Columns: id, email, name, createdAt, updatedAt' UNION SELECT 'Table: _prisma_migrations, Columns: id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count'",
+  "params": []
+}
+[2025-01-24 19:55:25] DEBUG: SQL query result
+Data: {
+  "result": [
+    {
+      "'Table: User, Columns: id, email, name, createdAt, updatedAt'": "Table: User, Columns: id, email, name, createdAt, updatedAt"
+    },
+    {
+      "'Table: User, Columns: id, email, name, createdAt, updatedAt'": "Table: _prisma_migrations, Columns: id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count"
+    }
+  ]
+}
+[2025-01-24 19:55:28] INFO: Generated summary
+Data: {
+  "summary": "The query result indicates the successful retrieval of metadata for two distinct tables within the database: the 'User' table, which stores essential user information including identification, email, and name, and the '_prisma_migrations' table, which tracks database migration details. This information is crucial for maintaining data integrity and supporting efficient database management, directly impacting the business by ensuring reliable user data handling and smooth operational transitions during database updates."
+}
+[2025-01-24 19:56:19] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737773779961",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:56:19.961Z"
+    }
+  ]
+}
+[2025-01-24 19:56:19] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 19:56:19] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\nYour role is to convert natural language requests into SQLite operations.\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. Use single quotes for string values\n7. Don't quote table/column names unless needed\n8. Consider relationships between tables\n9. Return ONLY a JSON response with no formatting\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "Schema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\nRequest: What can you do?"
+    }
+  ]
+}
+[2025-01-24 19:56:23] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": \"_prisma_migrations\",\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"Available operations include creating, reading, updating, and deleting records for the User table. Operations on the _prisma_migrations table are typically managed by the database migration tool and not directly by users.\",\n    \"sql\": \"SELECT 'User operations include CREATE, READ, UPDATE, DELETE; _prisma_migrations operations are managed by migration tools.' AS operations\"\n  }\n}"
+}
+[2025-01-24 19:56:23] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": "_prisma_migrations",
+      "operation": "select",
+      "status": "success",
+      "summary": "Available operations include creating, reading, updating, and deleting records for the User table. Operations on the _prisma_migrations table are typically managed by the database migration tool and not directly by users.",
+      "sql": "SELECT 'User operations include CREATE, READ, UPDATE, DELETE; _prisma_migrations operations are managed by migration tools.' AS operations"
+    }
+  }
+}
+[2025-01-24 19:56:23] INFO: Executing SQL query
+Data: {
+  "sql": "SELECT 'User operations include CREATE, READ, UPDATE, DELETE; _prisma_migrations operations are managed by migration tools.' AS operations",
+  "table": "User"
+}
+[2025-01-24 19:56:23] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "SELECT 'User operations include CREATE, READ, UPDATE, DELETE; _prisma_migrations operations are managed by migration tools.' AS operations",
+  "params": []
+}
+[2025-01-24 19:56:23] DEBUG: SQL query result
+Data: {
+  "result": [
+    {
+      "operations": "User operations include CREATE, READ, UPDATE, DELETE; _prisma_migrations operations are managed by migration tools."
+    }
+  ]
+}
+[2025-01-24 19:56:25] INFO: Generated summary
+Data: {
+  "summary": "The query result highlights that user operations encompass the fundamental actions of CREATE, READ, UPDATE, and DELETE, while operations related to _prisma_migrations are specifically handled by migration tools, indicating a structured approach to database management and migration that can enhance efficiency and reliability in managing data within a business."
+}
+[2025-01-24 19:57:49] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737773779961",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:56:19.961Z"
+    },
+    {
+      "id": "1737773785050",
+      "role": "assistant",
+      "content": "",
+      "timestamp": "2025-01-25T02:56:25.049Z"
+    },
+    {
+      "id": "1737773869612",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:57:49.612Z"
+    }
+  ]
+}
+[2025-01-24 19:57:49] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 19:57:49] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\nYour role is to convert natural language requests into SQLite operations.\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. Use single quotes for string values\n7. Don't quote table/column names unless needed\n8. Consider relationships between tables\n9. Return ONLY a JSON response with no formatting\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "Schema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\nRequest: What can you do?"
+    }
+  ]
+}
+[2025-01-24 19:57:53] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": \"_prisma_migrations\",\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"Available tables: User, _prisma_migrations\",\n    \"sql\": \"SELECT 'User', 'email', 'name', 'createdAt', 'updatedAt' FROM 'User' UNION SELECT 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', 'applied_steps_count' FROM '_prisma_migrations'\"\n  }\n}"
+}
+[2025-01-24 19:57:53] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": "_prisma_migrations",
+      "operation": "select",
+      "status": "success",
+      "summary": "Available tables: User, _prisma_migrations",
+      "sql": "SELECT 'User', 'email', 'name', 'createdAt', 'updatedAt' FROM 'User' UNION SELECT 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', 'applied_steps_count' FROM '_prisma_migrations'"
+    }
+  }
+}
+[2025-01-24 19:57:53] INFO: Executing SQL query
+Data: {
+  "sql": "SELECT 'User', 'email', 'name', 'createdAt', 'updatedAt' FROM 'User' UNION SELECT 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', 'applied_steps_count' FROM '_prisma_migrations'",
+  "table": "User"
+}
+[2025-01-24 19:57:53] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "SELECT 'User', 'email', 'name', 'createdAt', 'updatedAt' FROM 'User' UNION SELECT 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', 'applied_steps_count' FROM '_prisma_migrations'",
+  "params": []
+}
+[2025-01-24 19:57:53] ERROR: Failed to process SQL response
+Data: {
+  "message": "\nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `1`. Message: `SELECTs to the left and right of UNION do not have the same number of result columns`",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `1`. Message: `SELECTs to the left and right of UNION do not have the same number of result columns`\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:7339)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async ChatService.streamSQLResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:520:28)\n    at async ChatService.streamResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:432:13)"
+}
+[2025-01-24 19:58:33] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737773779961",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:56:19.961Z"
+    },
+    {
+      "id": "1737773785050",
+      "role": "assistant",
+      "content": "",
+      "timestamp": "2025-01-25T02:56:25.049Z"
+    },
+    {
+      "id": "1737773869612",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:57:49.612Z"
+    },
+    {
+      "id": "1737773873160",
+      "role": "assistant",
+      "content": "",
+      "timestamp": "2025-01-25T02:57:53.159Z"
+    },
+    {
+      "id": "1737773873355",
+      "role": "assistant",
+      "content": "Sorry, I encountered an error. Please try again.",
+      "timestamp": "2025-01-25T02:57:53.354Z"
+    },
+    {
+      "id": "1737773913012",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T02:58:33.012Z"
+    }
+  ]
+}
+[2025-01-24 19:58:33] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 19:58:33] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\nYour role is to convert natural language requests into SQLite operations.\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. Use single quotes for string values\n7. Don't quote table/column names unless needed\n8. Consider relationships between tables\n9. Return ONLY a JSON response with no formatting\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "Schema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\nRequest: What can you do?"
+    }
+  ]
+}
+[2025-01-24 19:58:36] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": \"_prisma_migrations\",\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"Available schemas for User and _prisma_migrations tables.\",\n    \"sql\": \"SELECT 'User', 'id', 'email', 'name', 'createdAt', 'updatedAt' UNION SELECT '_prisma_migrations', 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', 'applied_steps_count'\"\n  }\n}"
+}
+[2025-01-24 19:58:36] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": "_prisma_migrations",
+      "operation": "select",
+      "status": "success",
+      "summary": "Available schemas for User and _prisma_migrations tables.",
+      "sql": "SELECT 'User', 'id', 'email', 'name', 'createdAt', 'updatedAt' UNION SELECT '_prisma_migrations', 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', 'applied_steps_count'"
+    }
+  }
+}
+[2025-01-24 19:58:36] INFO: Executing SQL query
+Data: {
+  "sql": "SELECT 'User', 'id', 'email', 'name', 'createdAt', 'updatedAt' UNION SELECT '_prisma_migrations', 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', 'applied_steps_count'",
+  "table": "User"
+}
+[2025-01-24 19:58:36] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "SELECT 'User', 'id', 'email', 'name', 'createdAt', 'updatedAt' UNION SELECT '_prisma_migrations', 'id', 'checksum', 'finished_at', 'migration_name', 'logs', 'rolled_back_at', 'started_at', 'applied_steps_count'",
+  "params": []
+}
+[2025-01-24 19:58:36] ERROR: Failed to process SQL response
+Data: {
+  "message": "\nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `1`. Message: `SELECTs to the left and right of UNION do not have the same number of result columns`",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `1`. Message: `SELECTs to the left and right of UNION do not have the same number of result columns`\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:7339)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async ChatService.streamSQLResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:520:28)\n    at async ChatService.streamResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:432:13)"
+}
+[2025-01-24 20:00:32] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737774032776",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:00:32.776Z"
+    }
+  ]
+}
+[2025-01-24 20:00:32] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 20:00:32] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\n\nYour role is to convert natural language requests into SQLite operations.\nYou will receive the database schema and user's request.\nThe schema will be provided as a JSON array of table definitions.\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. Use single quotes for string values\n7. Don't quote table/column names unless needed\n8. Consider relationships between tables\n9. Return ONLY a JSON response with no formatting\n10. Analyze the schema before generating queries\n11. Use appropriate JOIN operations when needed\n12. Handle NULL values appropriately\n\nSchema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ]
+}
+[2025-01-24 20:00:36] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": null,\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"I can help you manage your database by converting natural language requests into SQLite operations. This includes creating SELECT, INSERT, UPDATE, and DELETE SQL queries based on your database schema. I can handle operations involving multiple tables, manage timestamps, and ensure sensitive data is handled appropriately. Please provide me with the specific task you need assistance with.\",\n    \"sql\": \"\"\n  }\n}"
+}
+[2025-01-24 20:00:36] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": null,
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "I can help you manage your database by converting natural language requests into SQLite operations. This includes creating SELECT, INSERT, UPDATE, and DELETE SQL queries based on your database schema. I can handle operations involving multiple tables, manage timestamps, and ensure sensitive data is handled appropriately. Please provide me with the specific task you need assistance with.",
+      "sql": ""
+    }
+  }
+}
+[2025-01-24 20:00:36] INFO: Executing SQL query
+Data: {
+  "sql": ""
+}
+[2025-01-24 20:00:36] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "",
+  "params": []
+}
+[2025-01-24 20:00:36] ERROR: Failed to process SQL response
+Data: {
+  "message": "\nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `21`. Message: `not an error`",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `21`. Message: `not an error`\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:7339)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async ChatService.streamSQLResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:542:28)\n    at async ChatService.streamResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:439:13)"
+}
+[2025-01-24 20:00:49] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737774049703",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:00:49.703Z"
+    }
+  ]
+}
+[2025-01-24 20:00:49] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 20:00:49] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\n\nYour role is to convert natural language requests into SQLite operations.\nYou will receive the database schema and user's request.\nThe schema will be provided as a JSON array of table definitions.\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. Use single quotes for string values\n7. Don't quote table/column names unless needed\n8. Consider relationships between tables\n9. Return ONLY a JSON response with no formatting\n10. Analyze the schema before generating queries\n11. Use appropriate JOIN operations when needed\n12. Handle NULL values appropriately\n\nSchema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ]
+}
+[2025-01-24 20:00:56] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": \"_prisma_migrations\",\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"I can perform operations such as select, insert, update, and delete on the User and _prisma_migrations tables. I can also handle complex queries involving joins, handling NULL values, and ensuring data integrity according to the provided schema.\",\n    \"sql\": \"\"\n  }\n}"
+}
+[2025-01-24 20:00:56] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": "_prisma_migrations",
+      "operation": "select",
+      "status": "success",
+      "summary": "I can perform operations such as select, insert, update, and delete on the User and _prisma_migrations tables. I can also handle complex queries involving joins, handling NULL values, and ensuring data integrity according to the provided schema.",
+      "sql": ""
+    }
+  }
+}
+[2025-01-24 20:00:57] INFO: Executing SQL query
+Data: {
+  "sql": ""
+}
+[2025-01-24 20:00:57] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "",
+  "params": []
+}
+[2025-01-24 20:00:57] ERROR: Failed to process SQL response
+Data: {
+  "message": "\nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `21`. Message: `not an error`",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `21`. Message: `not an error`\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:7339)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async ChatService.streamSQLResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:542:28)\n    at async ChatService.streamResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:439:13)"
+}
+[2025-01-24 20:06:22] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737774382731",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:06:22.731Z"
+    }
+  ]
+}
+[2025-01-24 20:06:22] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 20:06:22] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\n\nYour role is to convert natural language requests into SQLite operations.\nYou will receive the database schema and user's request.\nThe schema will be provided as a JSON array of table definitions.\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. Use single quotes for string values\n7. Don't quote table/column names unless needed\n8. Consider relationships between tables\n9. Return ONLY a JSON response with no formatting\n10. Analyze the schema before generating queries\n11. Use appropriate JOIN operations when needed\n12. Handle NULL values appropriately\n\nSchema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ]
+}
+[2025-01-24 20:06:26] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": null,\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"I can help you manage your database by converting natural language requests into SQLite operations. This includes creating SELECT, INSERT, UPDATE, and DELETE SQL queries based on your database schema. I can handle operations involving multiple tables, manage timestamps, and ensure data integrity while adhering to privacy and security guidelines.\",\n    \"sql\": \"\"\n  }\n}"
+}
+[2025-01-24 20:06:26] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": null,
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "I can help you manage your database by converting natural language requests into SQLite operations. This includes creating SELECT, INSERT, UPDATE, and DELETE SQL queries based on your database schema. I can handle operations involving multiple tables, manage timestamps, and ensure data integrity while adhering to privacy and security guidelines.",
+      "sql": ""
+    }
+  }
+}
+[2025-01-24 20:06:26] INFO: Executing SQL query
+Data: {
+  "sql": ""
+}
+[2025-01-24 20:06:26] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "",
+  "params": []
+}
+[2025-01-24 20:06:26] ERROR: SQL execution failed
+Data: {
+  "message": "\nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `21`. Message: `not an error`",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `21`. Message: `not an error`\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:7339)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async ChatService.streamSQLResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:543:32)\n    at async ChatService.streamResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:439:13)"
+}
+
+
+
+
+
+
+
+[2025-01-24 20:07:37] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737774457252",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:07:37.252Z"
+    }
+  ]
+}
+[2025-01-24 20:07:37] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 20:07:37] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\n\nYour role is to convert natural language requests into SQLite operations.\nYou will receive the database schema and user's request.\nThe schema will be provided as a JSON array of table definitions.\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. Use single quotes for string values\n7. Don't quote table/column names unless needed\n8. Consider relationships between tables\n9. Return ONLY a JSON response with no formatting\n10. Analyze the schema before generating queries\n11. Use appropriate JOIN operations when needed\n12. Handle NULL values appropriately\n\nSchema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ]
+}
+[2025-01-24 20:07:40] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": \"User\",\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"I can perform various SQL operations such as SELECT, INSERT, UPDATE, and DELETE on the User table and _prisma_migrations table. For the User table, I can manage data related to users including their id, email, name, and timestamps for creation and updates. For the _prisma_migrations table, I can manage migration data including id, checksum, migration name, and related timestamps.\",\n    \"sql\": \"\"\n  }\n}"
+}
+[2025-01-24 20:07:40] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "I can perform various SQL operations such as SELECT, INSERT, UPDATE, and DELETE on the User table and _prisma_migrations table. For the User table, I can manage data related to users including their id, email, name, and timestamps for creation and updates. For the _prisma_migrations table, I can manage migration data including id, checksum, migration name, and related timestamps.",
+      "sql": ""
+    }
+  }
+}
+[2025-01-24 20:07:40] INFO: Executing SQL query
+Data: {
+  "sql": ""
+}
+[2025-01-24 20:07:40] DEBUG: Processed SQL query
+Data: {
+  "processedSQL": "",
+  "params": []
+}
+[2025-01-24 20:07:40] ERROR: SQL execution failed
+Data: {
+  "message": "\nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `21`. Message: `not an error`",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `21`. Message: `not an error`\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:7339)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async ChatService.streamSQLResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:543:32)\n    at async ChatService.streamResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:439:13)"
+}
+[2025-01-24 20:12:06] INFO: Starting SQL query generation
+Data: {
+  "messages": [
+    {
+      "id": "1737774726786",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:12:06.786Z"
+    }
+  ]
+}
+[2025-01-24 20:12:06] DEBUG: Retrieved database schema
+Data: {
+  "schema": [
+    {
+      "name": "User",
+      "sql": "CREATE TABLE \"User\" (\n    \"id\" TEXT NOT NULL PRIMARY KEY,\n    \"email\" TEXT NOT NULL,\n    \"name\" TEXT,\n    \"createdAt\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n    \"updatedAt\" DATETIME NOT NULL\n)"
+    },
+    {
+      "name": "_prisma_migrations",
+      "sql": "CREATE TABLE \"_prisma_migrations\" (\n    \"id\"                    TEXT PRIMARY KEY NOT NULL,\n    \"checksum\"              TEXT NOT NULL,\n    \"finished_at\"           DATETIME,\n    \"migration_name\"        TEXT NOT NULL,\n    \"logs\"                  TEXT,\n    \"rolled_back_at\"        DATETIME,\n    \"started_at\"            DATETIME NOT NULL DEFAULT current_timestamp,\n    \"applied_steps_count\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\n)"
+    }
+  ]
+}
+[2025-01-24 20:12:06] DEBUG: Built SQL prompt
+Data: {
+  "prompt": [
+    {
+      "role": "system",
+      "content": "You are a CRM assistant that helps users manage their data using natural language.\n\nYour role is to convert natural language requests into SQLite operations.\nYou will receive the database schema and user's request.\nThe schema will be provided as a JSON array of table definitions.\n\nRules:\n1. Use ? for parameter placeholders\n2. Use strftime('%Y-%m-%d %H:%M:%f', 'now') for timestamps\n3. Never expose sensitive data\n4. For schema questions, return a SELECT query\n5. For operations, generate the appropriate SQL query\n6. Use single quotes for string values\n7. Don't quote table/column names unless needed\n8. Consider relationships between tables\n9. Return ONLY a JSON response with no formatting\n10. Analyze the schema before generating queries\n11. Use appropriate JOIN operations when needed\n12. Handle NULL values appropriately\n\nSchema: [\n  {\n    \"name\": \"User\",\n    \"sql\": \"CREATE TABLE \\\"User\\\" (\\n    \\\"id\\\" TEXT NOT NULL PRIMARY KEY,\\n    \\\"email\\\" TEXT NOT NULL,\\n    \\\"name\\\" TEXT,\\n    \\\"createdAt\\\" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\\n    \\\"updatedAt\\\" DATETIME NOT NULL\\n)\"\n  },\n  {\n    \"name\": \"_prisma_migrations\",\n    \"sql\": \"CREATE TABLE \\\"_prisma_migrations\\\" (\\n    \\\"id\\\"                    TEXT PRIMARY KEY NOT NULL,\\n    \\\"checksum\\\"              TEXT NOT NULL,\\n    \\\"finished_at\\\"           DATETIME,\\n    \\\"migration_name\\\"        TEXT NOT NULL,\\n    \\\"logs\\\"                  TEXT,\\n    \\\"rolled_back_at\\\"        DATETIME,\\n    \\\"started_at\\\"            DATETIME NOT NULL DEFAULT current_timestamp,\\n    \\\"applied_steps_count\\\"   INTEGER UNSIGNED NOT NULL DEFAULT 0\\n)\"\n  }\n]\n\nResponse Format:\n{\n  type: \"schema\" | \"operation\",\n  response: {\n    primary_table: string,\n    secondary_table: string | null,\n    operation: \"select\" | \"insert\" | \"update\" | \"delete\",\n    status: \"success\" | \"error\",\n    summary: string,\n    sql: string\n  }\n}"
+    },
+    {
+      "role": "user",
+      "content": "What can you do?"
+    }
+  ]
+}
+[2025-01-24 20:12:09] DEBUG: Received response from OpenAI
+Data: {
+  "response": "{\n  \"type\": \"schema\",\n  \"response\": {\n    \"primary_table\": null,\n    \"secondary_table\": null,\n    \"operation\": \"select\",\n    \"status\": \"success\",\n    \"summary\": \"I can help you manage your database by converting natural language requests into SQLite operations. This includes creating SELECT, INSERT, UPDATE, and DELETE SQL queries based on your database schema and the specific request you provide. I can handle operations involving multiple tables, including JOINs, and ensure that the queries are structured correctly according to the schema definitions you've shared.\",\n    \"sql\": \"\"\n  }\n}"
+}
+[2025-01-24 20:12:09] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": null,
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "I can help you manage your database by converting natural language requests into SQLite operations. This includes creating SELECT, INSERT, UPDATE, and DELETE SQL queries based on your database schema and the specific request you provide. I can handle operations involving multiple tables, including JOINs, and ensure that the queries are structured correctly according to the schema definitions you've shared.",
+      "sql": ""
+    }
+  }
+}
+[2025-01-24 20:16:50] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": "1737775010441",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:16:50.441Z"
+    }
+  ]
+}
+[2025-01-24 20:16:54] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "I can assist with creating SQL operations based on natural language requests for data manipulation and querying within the provided database schema. This includes inserting new records, updating existing records, deleting records, and selecting data from the tables. The current schema includes a 'User' table for storing user information and a '_prisma_migrations' table for tracking database migrations. Please provide your request in natural language, and I will convert it into the appropriate SQLite operation.",
+      "sql": ""
+    }
+  }
+}
+[2025-01-24 20:17:35] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": "1737775010441",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:16:50.441Z"
+    },
+    {
+      "id": "1737775014511",
+      "role": "assistant",
+      "content": "",
+      "timestamp": "2025-01-25T03:16:54.510Z"
+    },
+    {
+      "id": "1737775055823",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:17:35.823Z"
+    }
+  ]
+}
+[2025-01-24 20:17:39] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "I can assist with creating SQL operations based on natural language requests for data manipulation and querying within the provided database schema. This includes inserting new records, updating existing records, deleting records, and selecting data from the tables. The current schema includes a 'User' table for storing user information and a '_prisma_migrations' table for tracking database migrations. Please provide your request in natural language, and I will convert it into the appropriate SQLite operation.",
+      "sql": ""
+    }
+  }
+}
+[2025-01-24 20:21:07] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": "1737775267341",
+      "timestamp": "2025-01-25T03:21:07.341Z"
+    }
+  ]
+}
+[2025-01-24 20:21:11] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "",
+      "secondary_table": null,
+      "operation": "",
+      "status": "success",
+      "summary": "As a CRM assistant, I can help you manage your data in the SQLite database. I can perform various operations such as SELECT, INSERT, UPDATE, and DELETE. You can ask me to retrieve data, add new data, update existing data, or remove data from your database. I can also help you understand the schema of your database, which includes the structure and relationships of your tables.",
+      "sql": ""
+    }
+  }
+}
+[2025-01-24 20:21:51] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": "1737775267203",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:21:07.203Z"
+    },
+    {
+      "id": "1737775271152",
+      "role": "assistant",
+      "content": "",
+      "timestamp": "2025-01-25T03:21:11.151Z"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?",
+      "id": "1737775311040",
+      "timestamp": "2025-01-25T03:21:51.040Z"
+    }
+  ]
+}
+[2025-01-24 20:21:53] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "Count the total number of users",
+      "sql": "SELECT COUNT(*) FROM User"
+    }
+  }
+}
+[2025-01-24 20:21:53] ERROR: SQL execution failed
+Data: {
+  "message": "Do not know how to serialize a BigInt",
+  "stack": "TypeError: Do not know how to serialize a BigInt\n    at JSON.stringify (<anonymous>)\n    at ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:457:287)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:371:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:709:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-24 20:22:10] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": "1737775267203",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:21:07.203Z"
+    },
+    {
+      "id": "1737775271152",
+      "role": "assistant",
+      "content": "",
+      "timestamp": "2025-01-25T03:21:11.151Z"
+    },
+    {
+      "id": "1737775311005",
+      "role": "user",
+      "content": "How many users do we have?",
+      "timestamp": "2025-01-25T03:21:51.005Z"
+    },
+    {
+      "id": "1737775313314",
+      "role": "assistant",
+      "content": "",
+      "timestamp": "2025-01-25T03:21:53.313Z"
+    },
+    {
+      "role": "user",
+      "content": "Add a user for John Smith",
+      "id": "1737775330231",
+      "timestamp": "2025-01-25T03:22:10.231Z"
+    }
+  ]
+}
+[2025-01-24 20:22:15] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "insert",
+      "status": "success",
+      "summary": "A new user for John Smith has been added.",
+      "sql": "INSERT INTO User (id, email, name, createdAt, updatedAt) VALUES (?, ?, 'John Smith', strftime('%Y-%m-%d %H:%M:%f', 'now'), strftime('%Y-%m-%d %H:%M:%f', 'now'))"
+    }
+  }
+}
+[2025-01-24 20:22:15] ERROR: SQL execution failed
+Data: {
+  "message": "\nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `N/A`. Message: `N/A`",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `prisma.$queryRaw()` invocation:\n\n\nRaw query failed. Code: `N/A`. Message: `N/A`\n    at Vn.handleRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:7339)\n    at Vn.handleAndLogRequestError (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6663)\n    at Vn.request (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:121:6370)\n    at async l (/Users/dclements/code/spry/cursor_rules/app/node_modules/@prisma/client/runtime/library.js:130:9617)\n    at async ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:446:32)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:371:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:709:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}
+[2025-01-24 20:24:10] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "role": "user",
+      "content": "What can you do?",
+      "id": "1737775450743",
+      "timestamp": "2025-01-25T03:24:10.743Z"
+    }
+  ]
+}
+[2025-01-24 20:24:14] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "schema",
+    "response": {
+      "primary_table": "",
+      "secondary_table": null,
+      "operation": "",
+      "status": "success",
+      "summary": "As a CRM assistant, I can help you manage your data in the SQLite database. I can perform various operations such as SELECT, INSERT, UPDATE, and DELETE. You can ask me to retrieve data, add new data, update existing data, or remove data from your database. You can provide your requests in natural language, and I will convert them into SQLite operations.",
+      "sql": ""
+    }
+  }
+}
+[2025-01-24 20:24:22] INFO: Starting response generation
+Data: {
+  "messages": [
+    {
+      "id": "1737775450712",
+      "role": "user",
+      "content": "What can you do?",
+      "timestamp": "2025-01-25T03:24:10.712Z"
+    },
+    {
+      "id": "1737775454394",
+      "role": "assistant",
+      "content": "As a CRM assistant, I can help you manage your data in the SQLite database. I can perform various operations such as SELECT, INSERT, UPDATE, and DELETE. You can ask me to retrieve data, add new data, update existing data, or remove data from your database. You can provide your requests in natural language, and I will convert them into SQLite operations.",
+      "timestamp": "2025-01-25T03:24:14.393Z"
+    },
+    {
+      "role": "user",
+      "content": "How many users do we have?",
+      "id": "1737775462515",
+      "timestamp": "2025-01-25T03:24:22.515Z"
+    }
+  ]
+}
+[2025-01-24 20:24:24] DEBUG: Parsed SQL response
+Data: {
+  "sqlResponse": {
+    "type": "operation",
+    "response": {
+      "primary_table": "User",
+      "secondary_table": null,
+      "operation": "select",
+      "status": "success",
+      "summary": "Count the total number of users in the User table.",
+      "sql": "SELECT COUNT(*) FROM User"
+    }
+  }
+}
+[2025-01-24 20:24:24] ERROR: SQL execution failed
+Data: {
+  "message": "Do not know how to serialize a BigInt",
+  "stack": "TypeError: Do not know how to serialize a BigInt\n    at JSON.stringify (<anonymous>)\n    at ChatService.generateResponse (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:457:287)\n    at async ChatService.sendMessage (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:371:20)\n    at async POST (/Users/dclements/code/spry/cursor_rules/app/.next/server/chunks/[root of the server]__35ca99._.js:709:26)\n    at async AppRouteRouteModule.do (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:32847)\n    at async AppRouteRouteModule.handle (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:10:39868)\n    at async doRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1452:42)\n    at async responseGenerator (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1822:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:1832:28)\n    at async DevServer.renderPageComponent (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2259:24)\n    at async DevServer.renderToResponseImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:2297:32)\n    at async DevServer.pipeImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:959:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/next-server.js:281:17)\n    at async DevServer.handleRequestImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/base-server.js:853:17)\n    at async /Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:371:20\n    at async Span.traceAsyncFn (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/trace/trace.js:153:20)\n    at async DevServer.handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/dev/next-dev-server.js:368:24)\n    at async invokeRender (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:230:21)\n    at async handleRequest (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:408:24)\n    at async requestHandlerImpl (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/router-server.js:432:13)\n    at async Server.requestListener (/Users/dclements/code/spry/cursor_rules/app/node_modules/next/dist/server/lib/start-server.js:146:13)"
+}

@@ -3,61 +3,79 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { SendHorizontal, Sparkles } from "lucide-react";
+import { SendHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ChatInputProps {
-  onSendMessage: (message: string) => void;
+  onSubmit: (message: string) => void;
+  disabled?: boolean;
 }
 
-export function ChatInput({ onSendMessage }: ChatInputProps) {
-  const [message, setMessage] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+export function ChatInput({ onSubmit, disabled }: ChatInputProps) {
+  const [input, setInput] = useState("");
 
-  const handleSend = () => {
-    const trimmedMessage = message.trim();
-    if (trimmedMessage) {
-      onSendMessage(trimmedMessage);
-      setMessage("");
-      setIsTyping(false);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim()) {
+      onSubmit(input);
+      setInput("");
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
+  const handleExampleClick = (example: string) => {
+    onSubmit(example);
   };
 
   return (
-    <div className="relative">
-      <div className="absolute left-4 top-1/2 -translate-y-1/2">
-        <Sparkles className="h-4 w-4 text-muted-foreground" />
+    <div className="w-full space-y-4">
+      <form onSubmit={handleSubmit} className="relative">
+        <Input
+          type="text"
+          placeholder="Type your message..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          disabled={disabled}
+          className="w-full pr-20 focus-visible:ring-1 text-base py-6"
+        />
+        <Button 
+          type="submit" 
+          size="icon"
+          disabled={disabled || !input.trim()}
+          className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8"
+        >
+          <SendHorizontal className="h-5 w-5" />
+        </Button>
+      </form>
+      
+      <div className="flex flex-wrap gap-2 justify-center px-4">
+        <Button 
+          variant="secondary" 
+          size="sm"
+          onClick={() => handleExampleClick("What can you do?")}
+          disabled={disabled}
+          className="text-xs"
+        >
+          What can you do?
+        </Button>
+        <Button 
+          variant="secondary" 
+          size="sm"
+          onClick={() => handleExampleClick("How many users do we have?")}
+          disabled={disabled}
+          className="text-xs"
+        >
+          User Count
+        </Button>
+        <Button 
+          variant="secondary" 
+          size="sm"
+          onClick={() => handleExampleClick("Add a user for John Smith")}
+          disabled={disabled}
+          className="text-xs"
+        >
+          Add User
+        </Button>
       </div>
-      <Input
-        value={message}
-        onChange={(e) => {
-          setMessage(e.target.value);
-          setIsTyping(e.target.value.length > 0);
-        }}
-        onKeyDown={handleKeyDown}
-        placeholder="Ask about your finances..."
-        className="pl-10 pr-16"
-      />
-      <Button
-        onClick={handleSend}
-        disabled={!message.trim()}
-        size="icon"
-        variant="ghost"
-        className={cn(
-          "absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8",
-          isTyping ? "opacity-100" : "opacity-0",
-          "transition-opacity duration-200"
-        )}
-      >
-        <SendHorizontal className="h-4 w-4" />
-      </Button>
     </div>
   );
 } 

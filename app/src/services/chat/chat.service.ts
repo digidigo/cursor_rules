@@ -5,11 +5,27 @@ import {
   ChatResponse, 
   SendMessageOptions 
 } from '@/types/chat';
+import { SQL_PROMPTS } from './prompts/sql-prompts';
+import { PrismaClient, Prisma } from '@prisma/client';
+import { logger } from '@/lib/logger';
+import { v4 as uuidv4 } from 'uuid';
 
 interface StreamCallbacks {
   onContent: (content: string) => void | Promise<void>;
   onDone: (data: { content: string; usage?: OpenAI.Chat.Completions.ChatCompletion['usage']; cost?: number }) => void | Promise<void>;
   onError: (error: any) => void | Promise<void>;
+}
+
+interface SQLResponse {
+  type: 'operation' | 'schema';
+  response: {
+    primary_table: string;
+    secondary_table: string | null;
+    operation: string;
+    status: string;
+    summary: string;
+    sql: string;
+  };
 }
 
 /**
@@ -19,6 +35,7 @@ export class ChatService {
   private static instance: ChatService;
   private openai: OpenAI;
   private config: ChatServiceConfig;
+  private prisma: PrismaClient;
   private readonly inputTokenCost: number = 0.15 / 1_000_000; // $0.15 per 1M tokens
   private readonly cachedInputTokenCost: number = 0.075 / 1_000_000; // $0.075 per 1M tokens
   private readonly outputTokenCost: number = 0.60 / 1_000_000; // $0.60 per 1M tokens
@@ -30,9 +47,15 @@ export class ChatService {
       maxResponseTokens: 500,
       ...config,
     };
+
+    if (!this.config.model) {
+      throw new Error('OpenAI model must be specified in config');
+    }
+
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
+    this.prisma = new PrismaClient();
   }
 
   /**
@@ -48,45 +71,10 @@ export class ChatService {
   /**
    * Send a message and get a response
    */
-  public async sendMessage(options: SendMessageOptions): Promise<ReadableStream> {
+  public async sendMessage(options: SendMessageOptions): Promise<ChatResponse> {
     try {
       const messages = this.buildMessages(options);
-      let responseContent = '';
-      
-      const stream = await this.openai.chat.completions.create({
-        model: this.config.model,
-        messages: messages.map(msg => ({
-          role: msg.role as 'user' | 'assistant' | 'system',
-          content: msg.content,
-        })),
-        stream: true,
-        max_tokens: this.config.maxResponseTokens,
-      });
-
-      // Create a readable stream for the response
-      return new ReadableStream({
-        async start(controller) {
-          try {
-            for await (const chunk of stream) {
-              const content = chunk.choices[0]?.delta?.content || '';
-              if (content) {
-                responseContent += content;
-                controller.enqueue(
-                  new TextEncoder().encode(
-                    `data: ${JSON.stringify({ 
-                      content: responseContent,
-                      usage: chunk.usage,
-                    })}\n\n`
-                  )
-                );
-              }
-            }
-            controller.close();
-          } catch (error) {
-            controller.error(error);
-          }
-        },
-      });
+      return await this.generateResponse(messages);
     } catch (error) {
       console.error('ChatService Error:', error);
       throw error;
@@ -96,7 +84,7 @@ export class ChatService {
   /**
    * Build the messages array for the API request
    */
-  private buildMessages(options: SendMessageOptions): { role: string; content: string }[] {
+  private buildMessages(options: SendMessageOptions): ChatMessage[] {
     const messages = [...(options.previousMessages || [])];
     
     // Add the new message
@@ -109,12 +97,10 @@ export class ChatService {
 
     // Limit context window if needed
     if (this.config.maxContextMessages) {
-      return messages
-        .slice(-this.config.maxContextMessages)
-        .map(({ role, content }) => ({ role, content }));
+      return messages.slice(-this.config.maxContextMessages);
     }
 
-    return messages.map(({ role, content }) => ({ role, content }));
+    return messages;
   }
 
   private calculateCost(promptTokens: number, completionTokens: number): number {
@@ -124,52 +110,306 @@ export class ChatService {
     return Number((inputCost + outputCost).toFixed(6));
   }
 
-  async streamResponse(messages: ChatMessage[], callbacks: StreamCallbacks) {
+  private async generateResponse(messages: ChatMessage[]): Promise<ChatResponse> {
     try {
-      const stream = await this.openai.chat.completions.create({
+      logger.info('Starting response generation', { messages });
+      const schema = await this.getDatabaseSchema();
+      
+      // Build system prompt with schema included
+      const systemPrompt = SQL_PROMPTS.SYSTEM_PROMPT.replace('{schema}', JSON.stringify(schema, null, 2));
+      const prompt = [
+        { role: 'system' as const, content: systemPrompt },
+        { role: 'user' as const, content: messages[messages.length - 1].content }
+      ];
+
+      // Get initial response from LLM
+      const response = await this.openai.chat.completions.create({
         model: this.config.model,
-        messages: messages.map(msg => ({
-          role: msg.role === 'user' ? 'user' : 'assistant',
-          content: msg.content,
-        })) as OpenAI.Chat.ChatCompletionMessageParam[],
-        stream: true,
-        max_tokens: this.config.maxResponseTokens,
+        messages: prompt,
+        temperature: 0,
       });
 
-      let responseContent = '';
-
-      for await (const chunk of stream) {
-        const content = chunk.choices[0]?.delta?.content || '';
-        responseContent += content;
-        
-        if (content) {
-          await callbacks.onContent(responseContent);
-        }
+      const rawResponse = response.choices[0]?.message?.content;
+      if (!rawResponse) {
+        throw new Error('No response received from OpenAI');
       }
 
-      // Get final completion with usage data
+      const sqlResponse = this.parseSQLResponse(rawResponse);
+      logger.debug('Parsed SQL response', { sqlResponse });
+
+      // For schema queries, return immediately
+      if (sqlResponse.type === 'schema' || !sqlResponse.response.sql) {
+        return {
+          content: sqlResponse.response.summary,
+          usage: response.usage,
+          cost: this.calculateCost(response.usage?.prompt_tokens || 0, response.usage?.completion_tokens || 0),
+          isComplete: true
+        };
+      }
+
+      // For operation queries, execute SQL and summarize
+      try {
+        const { sql: processedSQL, params } = this.processSQL(sqlResponse.response.sql, messages[messages.length - 1].content);
+        const result = await this.executeSQL(processedSQL, params);
+
+        // Generate summary
+        const summaryResponse = await this.openai.chat.completions.create({
+          model: this.config.model,
+          messages: [
+            { role: 'system' as const, content: 'You are a database expert. Explain query results in clear, natural language.' },
+            { 
+              role: 'user' as const, 
+              content: SQL_PROMPTS.SUMMARY_PROMPT
+                .replace('{sql}', sqlResponse.response.sql)
+                .replace('{result}', JSON.stringify(result, null, 2))
+            }
+          ],
+          temperature: 0,
+        });
+
+        const summary = summaryResponse.choices[0]?.message?.content || 'No summary available';
+
+        // Calculate total usage and cost
+        const totalUsage = {
+          prompt_tokens: (response.usage?.prompt_tokens || 0) + (summaryResponse.usage?.prompt_tokens || 0),
+          completion_tokens: (response.usage?.completion_tokens || 0) + (summaryResponse.usage?.completion_tokens || 0),
+          total_tokens: (response.usage?.total_tokens || 0) + (summaryResponse.usage?.total_tokens || 0)
+        };
+
+        const totalCost = this.calculateCost(totalUsage.prompt_tokens, totalUsage.completion_tokens);
+
+        return {
+          content: `${sqlResponse.response.summary}\n\nResult: ${summary}`,
+          usage: totalUsage,
+          cost: totalCost,
+          isComplete: true
+        };
+      } catch (error) {
+        logger.error('SQL execution failed', error);
+        return {
+          content: `I understand what you want to do, but I encountered an error: ${this.getUserFriendlyError(error)}`,
+          usage: response.usage,
+          cost: this.calculateCost(response.usage?.prompt_tokens || 0, response.usage?.completion_tokens || 0),
+          isComplete: true
+        };
+      }
+    } catch (error: unknown) {
+      logger.error('Failed to process response', error);
+      return {
+        content: this.getUserFriendlyError(error),
+        usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+        cost: 0,
+        isComplete: true
+      };
+    }
+  }
+
+  private processSQL(sql: string, userMessage: string): { sql: string; params: any[] } {
+    // Extract values from user message
+    const values = this.extractValuesFromMessage(userMessage);
+    const params: any[] = [];
+    
+    // Replace :param with ? and collect parameters in order
+    const processedSQL = sql
+      .replace(/:([\w]+)/g, (match, param) => {
+        if (values[param]) {
+          params.push(values[param]);
+          return '?';
+        }
+        return match;
+      })
+      .replace(/\"([^\"]+)\"/g, '$1'); // Remove double quotes from identifiers
+
+    return { sql: processedSQL, params };
+  }
+
+  private extractValuesFromMessage(message: string): Record<string, any> {
+    const values: Record<string, any> = {
+      id: uuidv4(),
+      createdAt: "strftime('%Y-%m-%d %H:%M:%f', 'now')",
+      updatedAt: "strftime('%Y-%m-%d %H:%M:%f', 'now')"
+    };
+
+    // Extract email if present
+    const emailMatch = message.match(/\b[\w\.-]+@[\w\.-]+\.\w+\b/);
+    if (emailMatch) {
+      values.email = emailMatch[0];
+    }
+
+    // Extract name if present (assuming name is between quotes or is a word sequence)
+    const nameMatch = message.match(/"([^"]+)"|'([^']+)'|\b([A-Z][a-z]+ [A-Z][a-z]+)\b/);
+    if (nameMatch) {
+      values.name = nameMatch[1] || nameMatch[2] || nameMatch[3];
+    }
+
+    return values;
+  }
+
+  private getUserFriendlyError(error: any): string {
+    if (error.message.includes('Invalid `prisma.$queryRaw()` invocation')) {
+      return 'Sorry, I couldn\'t process that database operation. Please check your input and try again.';
+    }
+    if (error.message.includes('No response received from OpenAI')) {
+      return 'I\'m having trouble understanding your request. Could you rephrase it?';
+    }
+    if (error.message.includes('Invalid SQL response format')) {
+      return 'I couldn\'t generate a valid database query. Please try again with a clearer request.';
+    }
+    return 'An error occurred while processing your request. Please try again.';
+  }
+
+  /**
+   * Generate a SQL query from natural language
+   */
+  public async generateSQLQuery(request: string): Promise<SQLResponse> {
+    try {
+      console.log('\n=== SQL Query Generation Start ===');
+      console.log('Request:', request);
+
+      // Get database schema
+      const prisma = new PrismaClient();
+      const schema = await prisma.$queryRaw`
+        SELECT name, sql FROM sqlite_master 
+        WHERE type='table' AND name NOT LIKE 'sqlite_%'
+        ORDER BY name;
+      `;
+
+      console.log('\nDatabase Schema:');
+      console.log(JSON.stringify(schema, null, 2));
+
+      const messages = [
+        { role: 'system', content: SQL_PROMPTS.SYSTEM_PROMPT },
+        { 
+          role: 'user', 
+          content: SQL_PROMPTS.QUERY_PROMPT
+            .replace('{schema}', JSON.stringify(schema, null, 2))
+            .replace('{request}', request)
+        }
+      ];
+
+      console.log('\nPrompt Sent to OpenAI:');
+      console.log(JSON.stringify(messages, null, 2));
+
       const completion = await this.openai.chat.completions.create({
         model: this.config.model,
-        messages: messages.map(msg => ({
-          role: msg.role === 'user' ? 'user' : 'assistant',
-          content: msg.content,
-        })) as OpenAI.Chat.ChatCompletionMessageParam[],
+        messages: messages as any,
         stream: false,
         max_tokens: this.config.maxResponseTokens,
       });
 
-      const cost = completion.usage ? 
-        this.calculateCost(completion.usage.prompt_tokens, completion.usage.completion_tokens) : 
-        undefined;
+      const response = completion.choices[0]?.message?.content || '';
+      
+      console.log('\nRaw OpenAI Response:');
+      console.log(response);
 
-      await callbacks.onDone({
-        content: responseContent,
-        usage: completion.usage,
-        cost,
-      });
+      try {
+        const sqlResponse = JSON.parse(response) as SQLResponse;
+        console.log('\nParsed SQL Response:');
+        console.log(JSON.stringify(sqlResponse, null, 2));
+        return sqlResponse;
+      } catch (error) {
+        console.error('\nFailed to parse response:', error);
+        return {
+          type: 'operation',
+          response: {
+            primary_table: '',
+            secondary_table: null,
+            operation: 'select',
+            status: 'error',
+            summary: 'Failed to parse response',
+            sql: ''
+          }
+        };
+      }
     } catch (error) {
-      await callbacks.onError(error);
-      throw error;
+      console.error('\nGeneration Error:', error);
+      return {
+        type: 'operation',
+        response: {
+          primary_table: '',
+          secondary_table: null,
+          operation: 'select',
+          status: 'error',
+          summary: error instanceof Error ? error.message : 'Unknown error occurred',
+          sql: ''
+        }
+      };
+    } finally {
+      console.log('\n=== SQL Query Generation End ===\n');
     }
+  }
+
+  /**
+   * Generate a natural language summary of the SQL result
+   */
+  public async generateSummary(result: any, sqlResponse: SQLResponse['response']): Promise<string> {
+    try {
+      console.log('\n=== Summary Generation Start ===');
+      console.log('SQL:', sqlResponse.sql);
+      console.log('Result:', JSON.stringify(result, null, 2));
+
+      const messages = [
+        { role: 'system', content: 'You are a database expert. Explain query results in clear, natural language.' },
+        { 
+          role: 'user', 
+          content: SQL_PROMPTS.SUMMARY_PROMPT
+            .replace('{sql}', sqlResponse.sql)
+            .replace('{result}', JSON.stringify(result, null, 2))
+        }
+      ];
+
+      console.log('\nPrompt Sent to OpenAI:');
+      console.log(JSON.stringify(messages, null, 2));
+
+      const completion = await this.openai.chat.completions.create({
+        model: this.config.model,
+        messages: messages as any,
+        stream: false,
+        max_tokens: this.config.maxResponseTokens,
+      });
+
+      const summary = completion.choices[0]?.message?.content || 'No summary available';
+      console.log('\nGenerated Summary:');
+      console.log(summary);
+      return summary;
+    } catch (error) {
+      console.error('\nSummary Generation Error:', error);
+      return 'Failed to generate summary';
+    } finally {
+      console.log('\n=== Summary Generation End ===\n');
+    }
+  }
+
+  private async getDatabaseSchema(): Promise<any> {
+    const schema = await this.prisma.$queryRaw`
+      SELECT name, sql FROM sqlite_master 
+      WHERE type='table' AND name NOT LIKE 'sqlite_%'
+      ORDER BY name;
+    `;
+    return schema;
+  }
+
+  private buildSQLPrompt(messages: ChatMessage[], schema: any): any[] {
+    const prompt = [
+      { role: 'system', content: SQL_PROMPTS.SYSTEM_PROMPT },
+      { 
+        role: 'user', 
+        content: SQL_PROMPTS.QUERY_PROMPT
+          .replace('{schema}', JSON.stringify(schema, null, 2))
+          .replace('{request}', messages[messages.length - 1].content)
+      }
+    ];
+    return prompt;
+  }
+
+  private parseSQLResponse(rawResponse: string): SQLResponse {
+    const response = JSON.parse(rawResponse);
+    return response as SQLResponse;
+  }
+
+  private executeSQL(sql: string, params: any[] = []): Promise<any> {
+    return this.prisma.$queryRaw(
+      Prisma.sql([sql, ...params])
+    );
   }
 } 
